@@ -16,16 +16,7 @@ class Order extends Model
      */
     protected $fillable = [
         'cust_name',
-        'status',
-        'name',
-        'roll',
-        'color',
-        'gauge',
-        'desc',
-        'length',
-        'quantity',
-        'order_id',
-        'ppu',
+        'status'
 
     ];
 }

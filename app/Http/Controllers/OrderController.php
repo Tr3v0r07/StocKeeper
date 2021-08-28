@@ -67,6 +67,7 @@ class OrderController extends Controller
     {
         $orders = DB::table('orders')->where('id', $id)->get();
 
+
         $customerName = str_replace(' ','',$order->cust_name);
 
         $tableName = $customerName.'_order_'.$orders->id;
@@ -101,6 +102,12 @@ class OrderController extends Controller
             ->orderBy('id','desc')
             ->first();
         $customers = Customer::all();
+
+        if(is_null($orders)) {
+            $orders = new Order;
+
+            $orders->id = 1000;
+        }
         ++$orders->id;
 
         session()->forget('panels');
@@ -144,12 +151,13 @@ class OrderController extends Controller
         $order=session()->get('order');
         $panels=session()->get('panels');
         $trim=session()->get('trim');
+        $cart=session()->get('cart');
 
         $customer = DB::table('customers')
             ->where('name',$order['customerName'])->first();
             session()->put('customer', $customer);
 
-            return view ('order-forms.panels', compact('panelId','inventory','order','rolls','panels','trim','customer'));
+            return view ('order-forms.panels', compact('panelId','inventory','order','rolls','panels','trim','customer','cart'));
 
     }
 
@@ -213,7 +221,9 @@ class OrderController extends Controller
 
     public function toTrim()
     {
-         if (!session()->exists('panels')) {
+        $order=session()->get('order');
+
+        if (!session()->exists('panels')) {
             $trimId=0;
         }
         else {
@@ -282,9 +292,13 @@ class OrderController extends Controller
                 'ppu' => $request['ppu']
             ];
         }
+
+        $customer = DB::table('customers')
+        ->where('name',$order['customerName'])->first();
+
         session()->put('trim', $trim);
 
-        return view('order-forms.trim', compact('roll','order','rolls','inventory','panels', 'trimId','trim'));
+        return view('order-forms.trim', compact('roll','order','rolls','inventory','panels', 'trimId','trim', 'customer'));
 
 
     }
