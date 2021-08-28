@@ -41,10 +41,10 @@
 
             </div>
             @foreach ($panels as $panel)
-                <form action="{{ route('deleteOrderItem') }}" method="post">
+                <form action="{{ route('deletePanel') }}" method="post">
                     @csrf
                     <div class="grid gap-3 grid-cols-10 border-purple-200 border-b py-1">
-                        <input hidden readonly type="text" value="{{ $panel['id'] }}">
+                        <input hidden readonly name="id" type="text" value="{{ $panel['id'] }}">
                         <div class="col-start-1 col-span-3 my-auto">{{ $panel['sn'] }} - {{ $panel['color'] }} {{ $panel['gauge'] }} Gauge</div>
                         <div class="col-start-4 col-span-2 my-auto">{{ $panel['desc'] }}</div>
                         <div class="col-start-6  my-auto">{{ $panel['ft'] }}'</div>
@@ -73,10 +73,10 @@
 
                 </div>
                 @foreach ($trim as $piece)
-                <form action="{{ route('deleteOrderItem') }}" method="post">
+                <form action="{{ route('deleteTrim') }}" method="post">
                     @csrf
                     <div class="grid gap-3 grid-cols-10 border-purple-200 border-b py-1">
-                        <input hidden readonly type="text" value="{{ $piece['id'] }}">
+                        <input hidden readonly name="id" type="text" value="{{ $piece['id'] }}">
                         <div class="col-start-1 col-span-3 my-auto">{{ $piece['sn'] }} - {{ $piece['color'] }} - {{ $piece['gauge'] }} Gauge</div>
                         <div class="col-start-4 col-span-4 my-auto">{{ $piece['desc'] }}</div>
                         <div class="col-start-8 my-auto">{{ $piece['quantity'] }}</div>
@@ -104,10 +104,10 @@
 
             </div>
             @foreach ($cart as $piece)
-            <form action="{{ route('deleteOrderItem') }}" method="post">
+            <form action="{{ route('deleteMisc') }}" method="post">
                 @csrf
                 <div class="grid gap-3 grid-cols-10 border-purple-200 border-b py-1">
-                    <input hidden readonly type="text" value="{{ $piece['id'] }}">
+                    <input hidden readonly name="id" type="text" value="{{ $piece['id'] }}">
                     <div class="col-start-1 col-span-3 my-auto">{{ $piece['category'] }}</div>
                     <div class="col-start-4 col-span-2 my-auto">{{ $piece['desc'] }}</div>
                     <div class="col-start-8 my-auto">{{ $piece['quantity'] }}</div>

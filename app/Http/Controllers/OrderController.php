@@ -180,18 +180,24 @@ class OrderController extends Controller
         $panels = session()->get('panels');
         $panelId = ++$request['id'];
         $trim= session()->get('trim');
+
+        $remove = ((($request['ft'] * 12) + $request['in']) * $request['quantity']);
+        $remain -= $remove;
+
+
+
         // dd($roll);
         $quantity = $request['quantity'];
 
         if (isset($roll[$id])){
-            $roll[$id]['available'] -= ((($request['ft'] * 12) + $request['in']) * $request['quantity']);
+            $roll[$id]['available'] -= $remove;
         }
         else {
             $roll[$id] = [
                 'sn' => $request['sn'],
                 'color' => $currentRollColor,
                 'gauge' => $currentRollGauge,
-                'available' => $remain - ((($request['ft'] * 12) + $request['in']) * $request['quantity'])
+                'available' => $remain
             ];
         }
 
@@ -368,14 +374,47 @@ class OrderController extends Controller
         session()->put('roll', $roll);
         session()->put('panels', $panels);
         session()->put('cart', $cart);
+        $customer = DB::table('customers')
+        ->where('name',$order['customerName'])->first();
 
-        return view('order-forms.order_form', compact('roll','order','inventory','panels', 'trim','cart'));
+
+        return view('order-forms.order_form', compact('roll','order','inventory','panels', 'trim','cart', 'customer'));
 
 
     }
 
-    public function deleteOrderItem(Request $request)
+    public function deletePanel(Request $request)
     {
+        $panels=session()->get('panels');
+
+        $panels[$request->id]['quantity']= $panels[$request->id]['quantity']-$request->quantity;
+
+        session()->put('panels', $panels);
+
+        return redirect(route('toPanels'));
+    }
+    public function deleteTrim(Request $request)
+    {
+        $trim=session()->get('trim');
+
+        $trim[$request->id]['quantity']= $trim[$request->id]['quantity']-$request->quantity;
+
+        session()->put('trim', $trim);
+
+        return redirect(route('toTrim'));
+
+
+    }
+    public function deleteMisc(Request $request)
+    {
+        $cart=session()->get('cart');
+        // dd($request->id);
+        $cart[$request->id]['quantity']= $cart[$request->id]['quantity']-$request->quantity;
+
+        session()->put('cart', $cart);
+
+        return redirect(route('toCart'));
+
 
     }
 
@@ -421,6 +460,7 @@ class OrderController extends Controller
             ];
             $row = ++$row;
         }
+        
         foreach ($cart as $item){
             $ordermaker[$row] = [
                 'category' => $item['category'],
@@ -551,18 +591,6 @@ class OrderController extends Controller
         session()->forget('order');
 
         return view('dashboard');
-    }
-
-    public function continueOrder()
-    {
-        $order=session()->get('order');
-
-        $inventory = Inventory::all()
-            ->orderBy('id');
-        $cart = session()->get('cart');
-
-        return view ('order-forms.order_form', compact('inventory', 'cart', 'order'));
-
     }
 }
 

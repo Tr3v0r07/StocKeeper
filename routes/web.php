@@ -56,8 +56,11 @@ Route::get('/orders/new/quoteorder', ([OrderController::Class, 'submitToQuote'])
 Route::get('/orders/new/viewQuote', ([OrderController::Class, 'viewQuote']))->middleware(['auth'])->name('viewQuote');
 Route::post('/orders/new/updateOrderItem', ([OrderController::Class, 'updateOrderItem']))->middleware(['auth'])->name('updateOrderItem');
 Route::get('/orders/new/submitOrder', ([OrderController::Class, 'submitOrder']))->middleware(['auth'])->name('submitOrder');
-Route::get('/orders/new/continue', ([OrderController::Class, 'continueOrder']))->middleware(['auth'])->name('continueOrder');
+Route::get('/orders/new/continue', ([OrderController::Class, 'toPanels']))->middleware(['auth'])->name('toPanels');
 Route::get('/orders/new/clearSession', ([OrderController::Class, 'clearSession']))->middleware(['auth'])->name('clearSession');
+Route::post('/orders/new/deletePanel', ([OrderController::Class, 'deletePanel']))->middleware(['auth'])->name('deletePanel');
+Route::post('/orders/new/deleteTrim', ([OrderController::Class, 'deleteTrim']))->middleware(['auth'])->name('deleteTrim');
+Route::post('/orders/new/deleteMisc', ([OrderController::Class, 'deleteMisc']))->middleware(['auth'])->name('deleteMisc');
 
 Route::get('/customers', ([CustomerController::Class, 'all']))->middleware(['auth'])->name('customers');
 Route::get('/customers/new', ([CustomerController::Class, 'new']))->middleware(['auth'])->name('new_cust');

@@ -27,10 +27,19 @@
                         <option disabled selected value="">Select Roll</option>
                     @foreach ($rolls as $item)
                         @if (isset($roll[$item->id]))
-                            <option value="{{ $item->sn }}">{{ $item->sn  }} - {{ $item->color }} - {{ $item->gauge }} ({{ ($roll[$item->id]['available']/12)-($roll[$item->id]['available']%12) }}' {{ ($roll[$item->id]['available']%12) }}" )</option>
+                            @php
+                                $ft = ($roll[$item->id]['available']/12)-($roll[$item->id]['available']%12);
+                                $in = ($roll[$item->id]['available']%12);
+
+                            @endphp
                         @else
-                            <option value="{{ $item->sn }}">{{ $item->sn  }} - {{ $item->color }} - {{ $item->gauge }} ({{ (($item->remaining/12)-$item->remaining%12) }}' {{ $item->remaining%12 }}" )</option>
+                            @php
+                            $ft = ($item->remaining/12)-($item->remaining%12);
+                            $in = ($item->remaining%12);
+                            @endphp
                         @endif
+                        <option value="{{ $item->sn }}">{{ $item->sn  }} - {{ $item->color }} - {{ $item->gauge }} ({{ $ft }}' {{ $in }}" ) </option>
+
                     @endforeach
                 </select>
                 <select name="desc" required class="col-start-3 col-span-3 block mt-1 rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
@@ -58,8 +67,6 @@
         </form>
         <div class="inline-flex items-center mt-2 px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150 my-2" class="my-2"><a href="{{ route('toTrim') }}"> Proceed</a></div>
     </div>
-
-
 
 @endsection
 
