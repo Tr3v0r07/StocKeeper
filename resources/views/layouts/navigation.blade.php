@@ -33,13 +33,10 @@
                             <x-slot name="content">
                                 <!-- Authentication -->
                                     <x-dropdown-link :href="route('orders')">
-                                        {{ __('Active') }}
+                                        {{ __('View') }}
                                     </x-dropdown-link>
-                                    <x-dropdown-link :href="route('all_orders')">
-                                        {{ __('All') }}
-                                    </x-dropdown-link>
-                                    <x-dropdown-link :href="route('new_order')">
-                                        {{ __('Add New') }}
+                                    <x-dropdown-link :href="route('newOrder')">
+                                        {{ __('New') }}
                                     </x-dropdown-link>
                             </x-slot>
                         </x-dropdown>
@@ -62,10 +59,10 @@
                             <x-slot name="content">
                                 <!-- Authentication -->
                                     <x-dropdown-link :href="route('customers')">
-                                        {{ __('All Customers') }}
+                                        {{ __('Customers') }}
                                     </x-dropdown-link>
                                     <x-dropdown-link :href="route('new_cust')">
-                                        {{ __('Add New Customer') }}
+                                        {{ __('New Customer') }}
                                     </x-dropdown-link>
                             </x-slot>
                         </x-dropdown>
@@ -91,15 +88,16 @@
                                         {{ __('Inventory') }}
                                     </x-dropdown-link>
                                     <x-dropdown-link :href="route('new-inv')">
-                                        {{ __('Receive Shipment') }}
+                                        {{ __('Add New') }}
                                     </x-dropdown-link>
                                     <x-dropdown-link :href="route('new-roll')">
-                                        {{ __('New Roll') }}
+                                        {{ __('Rolls') }}
                                     </x-dropdown-link>
                             </x-slot>
                         </x-dropdown>
                     </div>
                     {{-- User Management --}}
+                @admin
                     <div class="hidden sm:flex sm:items-center sm:ml-6">
                         <x-dropdown align="left" width="48">
                             <x-slot name="trigger">
@@ -119,12 +117,13 @@
                                     <x-dropdown-link :href="route('user')">
                                         {{ __('Users') }}
                                     </x-dropdown-link>
-                                    <x-dropdown-link :href="route('profile')">
+                                    <x-dropdown-link :href="route('newUser')">
                                         {{ __('Add New') }}
                                     </x-dropdown-link>
                             </x-slot>
                         </x-dropdown>
                     </div>
+                @endadmin
                 </div>
             </div>
 
@@ -179,13 +178,46 @@
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
-        </div>
-
-        <!-- Responsive Settings Options -->
+            {{-- Orders --}}
+            <x-responsive-dropdown :href="'#'" :active="request()->routeIs('orders', 'newOrder')">
+                <x-slot name="name">Orders</x-slot>
+                <x-slot name="children" >
+                    <div class="mb-3"><a href="{{ route('orders') }}">View</a><br></div>
+                    <div class="mt-3"><a href="{{ route('newOrder') }}">New</a></div>
+                </x-slot>
+            </x-responsive-dropdown>
+            {{-- Customers --}}
+            <x-responsive-dropdown :href="'#'" :active="request()->routeIs('customers','new_cust')">
+                <x-slot name="name">Customers</x-slot>
+                <x-slot name="children" >
+                    <div class="mb-3"><a href="{{ route('customers') }}">View</a><br></div>
+                    <div class="mt-3><a" href="{{ route('new_cust') }}">New</a></div>
+                </x-slot>
+            </x-responsive-dropdown>
+            {{-- Inventory --}}
+            <x-responsive-dropdown :href="'#'" :active="request()->routeIs('view-inv','new-inv','new-roll')">
+                <x-slot name="name">Inventory</x-slot>
+                <x-slot name="children" >
+                    <div class="mb-3"><a href="{{ route('view-inv') }}">View</a><br></div>
+                    <div class="my-3"><a href="{{ route('new-inv') }}">New</a><br></div>
+                    <div class="mt-3"><a href="{{ route('new-roll') }}">Rolls</a></div>
+                </x-slot>
+            </x-responsive-dropdown>
+            {{-- User Management --}}
+            @admin
+            <x-responsive-dropdown :href="'#'" :active="request()->routeIs('user','newUser')">
+                <x-slot name="name">User Management</x-slot>
+                <x-slot name="children" >
+                    <div class="mb-3"><a href="{{ route('user') }}">Users</a><br></div>
+                    <div class="mt-3"><a href="{{ route('newUser') }}">New</a></div>
+                </x-slot>
+            </x-responsive-dropdown>
+            @endadmin
+            <!-- Responsive Settings Options -->
         <div class="pt-4 pb-1 border-t border-gray-200">
             <div class="px-4">
-                <div class="font-medium text-base text-gray-800">{{ Auth::user()->name }}</div>
-                <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
+                <div class="font-medium text-base text-gray-800">{{ Auth::user()->first_name }} {{ Auth::user()->last_name }}</div>
+                <div class="font-medium text-sm text-gray-500"></div>
             </div>
 
             <div class="mt-3 space-y-1">

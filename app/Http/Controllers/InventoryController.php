@@ -17,24 +17,24 @@ class InventoryController extends Controller
         if ($curcat != "") {
 
             $inv = DB::table('inventories')->where('category', $curcat)->get();
-        }    
+        }
         else {
             $inv = Inventory::all();
-  
+
         }
-    
+
         return view('inventory.view', compact('inv', 'curcat'));
     }
 
-    
+
     public function new()
     {
-    
+
         return view('inventory.new_inventory');
     }
 
     public function store(Request $request)
-    {   
+    {
         $add =$request->except('_token');
         DB::table('inventories')->insert($add);
 
@@ -46,12 +46,14 @@ class InventoryController extends Controller
         $colors = DB::table('colors')->get();
         $rolls = DB::table('rolls')->where("remaining", '>', 0)->get();
 
-        return view('inventory.newroll', compact('colors', 'rolls'));
+        $count = DB::table('rolls')->where("remaining", '>', 0)->count();
+
+        return view('inventory.newroll', compact('colors', 'rolls','count'));
     }
 
     public function storeroll(Request $request)
     {
-        
+
         $new = $request->except('_token');
         $new['length'] = 12 * $new['length'];
         $new['remaining'] = $new['length'];
@@ -62,5 +64,5 @@ class InventoryController extends Controller
         return redirect()->back();
     }
 
-    
+
 }

@@ -5,6 +5,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\InventoryController;
 use Illuminate\Support\Facades\Route;
+use App\Models\Order;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,7 +23,7 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    return view('users.dashboard');
 })->middleware(['auth'])->name('dashboard');
 
 Route::get('/profile', function () {
@@ -30,42 +31,43 @@ Route::get('/profile', function () {
 })->middleware(['auth'])->name('profile');
 
 Route::get('/user', ([UserController::Class, 'index']))->middleware(['auth'])->name('user');
+Route::get('/newuser', function () {
+    return view('users.newUser');
+})->middleware(['auth'])->name('newUserForm');
+Route::post('/user', ([UserController::Class, 'newUser']))->middleware(['auth'])->name('newUser');
 
-Route::get('/new_user', function () {
-    return view('new_user');
-})->middleware(['auth'])->name('new_user');
 
-Route::get('/orders', ([OrderController::Class, 'active']))->middleware(['auth'])->name('orders');
-Route::get('/orders/estimated', ([OrderController::Class, 'estimated']))->middleware(['auth'])->name('estimated');
-Route::get('/orders/accepted', ([OrderController::Class, 'accepted']))->middleware(['auth'])->name('accepted');
-Route::get('/orders/completed', ([OrderController::Class, 'completed']))->middleware(['auth'])->name('completed');
-Route::get('/orders/invoiced', ([OrderController::Class, 'invoiced']))->middleware(['auth'])->name('invoiced');
-Route::get('/orders/edit/{id}', ([OrderController::Class, 'edit']))->middleware(['auth'])->name('edit');
-Route::get('/orders/delete/{id}', ([OrderController::Class, 'delete']))->middleware(['auth'])->name('delete');
-Route::get('/orders/all', ([OrderController::Class, 'all_orders']))->middleware(['auth'])->name('all_orders');
-Route::get('/orders/new', ([OrderController::Class, 'new_order']))->middleware(['auth'])->name('new_order');
-Route::post('/orders/new/setCustomer', ([OrderController::Class, 'setCustomer']))->middleware(['auth'])->name('setCustomer');
-Route::get('/orders/new/panels', ([OrderController::Class, 'toPanels']))->middleware(['auth'])->name('toPanels');
-Route::post('/orders/new/addpanel', ([OrderController::Class, 'addPanel']))->middleware(['auth'])->name('addPanel');
-Route::get('/orders/new/trim', ([OrderController::Class, 'toTrim']))->middleware(['auth'])->name('toTrim');
-Route::post('/orders/new/addtrim', ([OrderController::Class, 'addTrim']))->middleware(['auth'])->name('addTrim');
-Route::get('/orders/new/add', ([OrderController::Class, 'toCart']))->middleware(['auth'])->name('toCart');
-Route::post('/orders/new/additem', ([OrderController::Class, 'addItemToCart']))->middleware(['auth'])->name('addItem');
-Route::post('/orders/new/deleteitem', ([OrderController::Class, 'deleteOrderItem']))->middleware(['auth'])->name('deleteOrderItem');
-Route::get('/orders/new/quoteorder', ([OrderController::Class, 'submitToQuote']))->middleware(['auth'])->name('submitToQuote');
-Route::get('/orders/new/viewQuote', ([OrderController::Class, 'viewQuote']))->middleware(['auth'])->name('viewQuote');
-Route::post('/orders/new/updateOrderItem', ([OrderController::Class, 'updateOrderItem']))->middleware(['auth'])->name('updateOrderItem');
-Route::get('/orders/new/submitOrder', ([OrderController::Class, 'submitOrder']))->middleware(['auth'])->name('submitOrder');
-Route::get('/orders/new/continue', ([OrderController::Class, 'toPanels']))->middleware(['auth'])->name('toPanels');
-Route::get('/orders/new/clearSession', ([OrderController::Class, 'clearSession']))->middleware(['auth'])->name('clearSession');
-Route::post('/orders/new/deletePanel', ([OrderController::Class, 'deletePanel']))->middleware(['auth'])->name('deletePanel');
-Route::post('/orders/new/deleteTrim', ([OrderController::Class, 'deleteTrim']))->middleware(['auth'])->name('deleteTrim');
-Route::post('/orders/new/deleteMisc', ([OrderController::Class, 'deleteMisc']))->middleware(['auth'])->name('deleteMisc');
+Route::get('/orders', ([OrderController::Class, 'all']))->middleware(['auth'])->name('orders');
+Route::get('/orders/query/{status}',([OrderController::Class, 'view']))->middleware(['auth'])->name('view');
+Route::get('/orders/view/{id}', ([OrderController::Class, 'viewOrder']))->middleware(['auth'])->name('viewOrder');
+// Route::get('/orders/edit/{id}', ([OrderController::Class, 'edit']))->middleware(['auth'])->name('edit');
+// Route::get('/orders/delete/{id}', ([OrderController::Class, 'delete']))->middleware(['auth'])->name('delete');
+Route::get('/orders/advance/{status}', ([OrderController::Class, 'advance']))->middleware(['auth'])->name('advance');
+Route::post('/orders/Accepted/accepted', ([OrderController::Class, 'accept']))->middleware(['auth'])->name('accept');
+Route::get('/orders/new', ([Ordercontroller::Class, 'newOrder' ]))->middleware(['auth'])->name('newOrder');
+Route::post('/orders/new/setCustomer', ([OrderController::Class, 'quoteOrder']))->middleware(['auth'])->name('quoteOrder');
+// Route::get('/orders/new/panels', ([OrderController::Class, 'toPanels']))->middleware(['auth'])->name('toPanels');
+// Route::post('/orders/new/addpanel', ([OrderController::Class, 'addPanel']))->middleware(['auth'])->name('addPanel');
+// Route::get('/orders/new/trim', ([OrderController::Class, 'toTrim']))->middleware(['auth'])->name('toTrim');
+// Route::post('/orders/new/addtrim', ([OrderController::Class, 'addTrim']))->middleware(['auth'])->name('addTrim');
+// Route::get('/orders/new/add', ([OrderController::Class, 'toCart']))->middleware(['auth'])->name('toCart');
+// Route::post('/orders/new/additem', ([OrderController::Class, 'addItemToCart']))->middleware(['auth'])->name('addItem');
+// Route::post('/orders/new/deleteitem', ([OrderController::Class, 'deleteOrderItem']))->middleware(['auth'])->name('deleteOrderItem');
+Route::post('/orders/new/quote', ([OrderController::Class, 'totalQuote']))->middleware(['auth'])->name('totalQuote');
+// Route::get('/orders/new/viewQuote', ([OrderController::Class, 'viewQuote']))->middleware(['auth'])->name('viewQuote');
+// Route::post('/orders/new/updateOrderItem', ([OrderController::Class, 'updateOrderItem']))->middleware(['auth'])->name('updateOrderItem');
+// Route::get('/orders/new/submitOrder', ([OrderController::Class, 'submitOrder']))->middleware(['auth'])->name('submitOrder');
+// // Route::get('/orders/new/continue', ([OrderController::Class, 'toPanels']))->middleware(['auth'])->name('toPanels');
+// Route::get('/orders/new/clearSession', ([OrderController::Class, 'clearSession']))->middleware(['auth'])->name('clearSession');
+// Route::post('/orders/new/deletePanel', ([OrderController::Class, 'deletePanel']))->middleware(['auth'])->name('deletePanel');
+// Route::post('/orders/new/deleteTrim', ([OrderController::Class, 'deleteTrim']))->middleware(['auth'])->name('deleteTrim');
+// Route::post('/orders/new/deleteMisc', ([OrderController::Class, 'deleteMisc']))->middleware(['auth'])->name('deleteMisc');
+
 
 Route::get('/customers', ([CustomerController::Class, 'all']))->middleware(['auth'])->name('customers');
 Route::get('/customers/new', ([CustomerController::Class, 'new']))->middleware(['auth'])->name('new_cust');
 Route::post('/customers', ([CustomerController::Class, 'add']))->middleware(['auth'])->name('add');
-// Route::get('/customers/{id}', ([CustomerController::Class, 'view']))->middleware(['auth'])->name('customer');
+Route::get('/customers/{id}', ([CustomerController::Class, 'viewCustomer']))->middleware(['auth'])->name('viewCustomer');
 Route::get('/customers/edit/{id}', ([CustomerController::Class, 'alter']))->middleware(['auth'])->name('edit');
 Route::get('/customers/delete/{id}', ([CustomerController::Class, 'delete']))->middleware(['auth'])->name('del_cust');
 

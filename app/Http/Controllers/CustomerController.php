@@ -17,16 +17,18 @@ class CustomerController extends Controller
 
         $customers = DB::table('customers')->get();
 
-        return view('customers.customers', compact('customers'));
+        return view('customers.search', compact('customers'));
 
     }
 
-    public function view($id)
+    public function viewCustomer($id)
     {
 
-        $customers = DB::table('customers')->get();
+        $customer = Customer::where('id',$id)->first();
 
-        return view('customers.customers', compact('customers'));
+        $orders = Order::where('cust_name', $customer->name)->get('id','status');
+
+        return view('customers.view', compact('customer','orders'));
 
     }
 
@@ -38,7 +40,7 @@ class CustomerController extends Controller
 
         $states= DB::table('us_states')->get();
 
-        return view('customers.new_customer', compact('customers'), compact('states'));
+        return view('customers.new', compact('customers','states'));
 
     }
 
@@ -46,22 +48,22 @@ class CustomerController extends Controller
     {
 
         $customer=$request->except('_token');
-        
+
 
         DB::table('customers')->insert($customer);
         $customers = DB::table('customers')->get();
 
-        return view('customers.customers', compact('customers'));
+        return view('customers.search', compact('customers'));
 
     }
 
-    public function alter($id) 
+    public function alter($id)
     {
         $customer = DB::table('customers')->where('id', $id)->first();
 
         $states= DB::table('us_states')->get();
 
-        return view('customers.edit_customer', compact('customer', 'states'));
+        return view('customers.edit', compact('customer', 'states'));
     }
 
     public function delete($id)
@@ -69,6 +71,6 @@ class CustomerController extends Controller
         $customer = DB::table('customers')->where('id', $id)->delete();
 
         return redirect()->back();
- 
+
     }
 }

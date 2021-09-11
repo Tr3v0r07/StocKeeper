@@ -61,7 +61,7 @@
                         <div class="col-start-7 my-auto">{{ $panel->in }}"</div>
                         <div class="col-start-8 my-auto">{{ $panel->quantity }}</div>
                         <div class="col-start-9 my-auto">$ <input id="remove" class=" w-3/4 rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" type="text" name="ppu" value="{{ $panel->ppu }}" /></div>
-                        <div class="col-start-10 my-auto">$ {{ $panel->quantity * $panel->ppu }}</div>
+                        <div class="col-start-10 my-auto">$ {{ ($panel->ft+($panel->in/12))*$panel->ppu*$panel->quantity }}</div>
                         <div class="col-start-11 my-auto"><x-button class="noprint " href="">Update</x-button></div>
                     </div>
                 </form>

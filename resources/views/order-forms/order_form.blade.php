@@ -2,7 +2,7 @@
 
 @section('orderForm')
     @include('order-forms.orderview')
-<div class="p-2">
+{{-- <div class="p-2">
     <div class="grid gap-3 grid-cols-6 auto-cols-auto">
 
         <div class="col-start-1 font-bold">Category</div>
@@ -33,9 +33,9 @@
         </div>
         </form>
     @endforeach
-</div>
+</div> --}}
 
-
+This is a test
 
 @endsection
 

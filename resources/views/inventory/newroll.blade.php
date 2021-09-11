@@ -6,7 +6,7 @@
     <form action="{{ route('roll-store') }}" class="grid gap-3 grid-cols-5 m-auto">
         <x-label for="sn" :value="__('Roll Number')" class="mt-2 row-start-1 col-start-1"></x-label>
         <x-label for="color" :value="__('Color')" class="mt-2 row-start-1 col-start-2"></x-label>
-        <x-label for="gauge" :value="__('gauge')" class="mt-2 row-start-1 col-start-3"></x-label>
+        <x-label for="gauge" :value="__('Gauge')" class="mt-2 row-start-1 col-start-3"></x-label>
         <x-label for="length" :value="__('Length')" class="mt-2 row-start-1 col-start-4"></x-label>
         <x-input id="sn" placeholder="Roll Number" class="row-start-2 col-start-1" type="text" name="sn" required :value="old('sn')" />
         <select name="color" id="color" class="row-start-2 col-start-2 block mt-1 rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">

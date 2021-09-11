@@ -3,7 +3,6 @@
         <h2 class="font-semibold text-xl text-gray-700 leading-tight">
             {{ __('Customers') }}
         </h2>
-        @include('order-forms.continue')
         <br>
         <x-nav-link :href="route('customers')" :active="request()->routeIs('customers')">
             {{ __('All Customers') }}
@@ -13,12 +12,18 @@
         </x-nav-link>
     </x-slot>
 
-    
+
     <div class="py-12">
         <div class="max-w-6xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
-                    @include('customers.customer-query')
+                    <div class="w-max mx-auto  mt-6 px-6 py-4 bg-gray-200 shadow-md  sm:rounded-lg">
+                        @yield('customerSearch')
+                        @yield('newCustomer')
+                        @yield('editCustomer')
+                        @yield('viewCustomer')
+
+                    </div>
                 </div>
             </div>
         </div>

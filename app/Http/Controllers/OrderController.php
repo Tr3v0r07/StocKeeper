@@ -9,93 +9,144 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Customer;
 use App\Models\Inventory;
 use App\Models\Order;
+use App\Models\Roll;
 
 
 
 
 class OrderController extends Controller
 {
-    public function active()
-    {
-        $orders = DB::table('orders')->where('status', ['estimated','accepted','completed','invoiced'])->get();
 
-        return view ('orders', compact('orders'));
+
+    public function view($status)
+    {
+
+
+        $orders = DB::table('orders')->where('status', $status)->get();
+
+        return view ('order-forms.orderquery', compact('orders'));
 
     }
 
-    public function estimated()
+    public function viewOrder($id)
     {
-        $orders = DB::table('orders')->where('status', 'estimated')->get();
+        session()->forget('order');
+        $orders = DB::table('orders')->where('id', $id)->first();
+        // dd($id);
+        $tableName = $orders->cust_name.'/'.$orders->id;
 
-        return view ('orders', compact('orders'));
+        $order = DB::table($tableName)->get();
+        $customer = DB::table('customers')->where('name',$orders->cust_name)->first();
+        $sub=0;
+        $orderid = $orders->id;
+        foreach ($order as $row){
+            $total = $row->ppu*$row->quantity;
+            if ($row->category == 'Panels'){
+                $length = $row->ft + ($row->in/12);
+                $total = $length*$total;
+            }
+        $sub += $total;
+        }
+        session()->put('order', $orders);
+        $sn = DB::table($tableName)->select('sn')->distinct()->get();
+
+
+        return view ('order-forms.view', compact('order','customer','total','orderid','sub','orders','sn'));
 
     }
 
-    public function accepted()
+    public function accept(Request $request)
     {
-        $orders = DB::table('orders')->where('status', 'accepted')->get();
+        $request = $request->except('_token');
+        $orders = session()->get('order');
+        $tableName = $orders->cust_name.'/'.$orders->id;
 
-        return view ('orders', compact('orders'));
+        $sn = DB::table($tableName)->select('sn')->where('sn','!=','')->distinct()->get();
+
+        $i = 0;
+            foreach ($sn as $new){
+                $num[$i] = $new->sn;
+                ++$i;
+            }
+        // dd($sn);
+
+        $rolls = DB::table('rolls')->where('sn', $num)->get();
+
+        foreach ($rolls as $roll){
+            $remove = (($request['tft'][$roll->sn]*12)+$request['tin'][$roll->sn])+(($request['wft'][$roll->sn]*12)+$request['win'][$roll->sn]);
+            $remaining = $roll->remaining - $remove;
+            DB::table('rolls')->where('sn',$roll->sn)->update(['remaining' => $remaining]);
+        }
+
+        $orders->status = 'Completed';
+
+        session()->put('order', $orders);
+        DB::table('orders')->where('id', $orders->id)->update(['status'=> $orders->status]);
+
+        return redirect()->route('viewOrder', ['id' => $orders->id]);
 
     }
 
-    public function completed()
+
+    public function advance($status)
     {
-        $orders = DB::table('orders')->where('status', 'completed')->get();
+        $order = session()->get('order');
+        // dd($order);
 
-        return view ('orders', compact('orders'));
+        DB::table('orders')->where('id', $order->id)->update(['status'=> $status]);
+        $orders = DB::table('orders')->where('id', $order->id)->first();
+        session()->put('orders', $orders);
+        $tableName = $orders->cust_name.'/'.$orders->id;
+        $sn = DB::table($tableName)->select('sn')->where('sn','!=','')->where('category','Panels')->distinct()->get();
 
+        // dd($sn);
+
+            if ($status == 'Accepted'){
+                foreach ($sn as $num){
+                    if (!isset($ft)){
+                        $ft = DB::table($tableName)->where('sn',$num->sn)->sum('ft');
+                    }
+                    else {
+                        $ft += DB::table($tableName)->where('sn',$num->sn)->sum('ft');
+
+                    }
+                    if (!isset($in)){
+                        $in = DB::table($tableName)->where('sn',$num->sn)->sum('in');
+                    }
+                    else {
+                        $in += DB::table($tableName)->where('sn',$num->sn)->sum('in');
+
+                    }
+
+                    $remove = ($ft *12)+$in;
+                    $roll = DB::table('rolls')->where('sn', $num->sn)->first();
+                    // dd(is_object($roll));
+                    $remaining = $roll->remaining;
+                    // dd($remaining);
+                    $left = $remaining - $remove;
+                    DB::table('rolls')->where('sn', $num->sn)->update(['remaining' => $left]);
+
+              }
+            }
+        return redirect()->route('viewOrder', ['id' => $orders->id]);
     }
 
-    public function invoiced()
-    {
-        $orders = DB::table('orders')->where('status', 'invoiced')->get();
-
-        return view ('orders', compact('orders'));
-
-    }
-
-    public function delivered()
-    {
-        $orders = DB::table('orders')->where('status', 'delivered')->get();
-
-        return view ('orders', compact('orders'));
-
-    }
-
-    public function delete($id)
-    {
-        $orders = DB::table('orders')->where('id', $id)->get();
-
-
-        $customerName = str_replace(' ','',$order->cust_name);
-
-        $tableName = $customerName.'_order_'.$orders->id;
-        Schema::dropIfExists($tableName);
-
-        DB::table('orders')->where('id', $id)->delete();
-        return redirect()->back();
-
-
-    }
-
-    public function edit($id)
-    {
-        $orders = DB::table('orders')->where('id', $id)->get();
-
-        return view ('orders', compact('orders'));
-
-    }
-
-    public function all_orders()
+    public function all()
     {
         $orders = DB::table('orders')->get();
 
-        return view ('all_orders', compact('orders'));
-
+        return view ('order-forms.orderquery', compact('orders'));
     }
 
-    public function new_order()
+
+    // public function editOrder($id)
+    // {
+    //     $order = DB::table('orders')->where('id',$id)->get();
+
+    //     return view ('order-forms.orders', compact('order'));
+    // }
+
+    public function newOrder()
     {
 
         $orders = DB::table('orders')
@@ -110,487 +161,151 @@ class OrderController extends Controller
         }
         ++$orders->id;
 
-        session()->forget('panels');
-        session()->forget('trim');
-        session()->forget('cart');
-        session()->forget('roll');
-        session()->forget('order');
-
-        return view ('order-forms.setCustomer', compact('orders', 'customers'));
-    }
-
-
-    public function setCustomer(Request $request)
-    {
-            $order = array();
-            $order = [
-                'orderId' => $request->id,
-                'customerName' => $request->customerName,
-            ];
-
-            session()->put('order', $order);
-            return redirect(route('toPanels'));
-    }
-
-    public function toPanels()
-    {
-        if (!session()->exists('panels')) {
-            $panelId=0;
-        }
-        else {
-            $panelId = session()->get('panels');
-            $panelkey = krsort($panelId);
-            $panelId = array_key_last($panelId);
-
-        }
-
-        $inventory = DB::table('inventories')->where('category','Panels')->get();
-        // dd($inventory);
         $rolls=DB::table('rolls')->get();
+        $inv=DB::table('inventories')
+                    ->where('category','Fastners')
+                    ->orWhere('category','Boots')
+                    ->orWhere('category','Misc')
+                    ->get();
+        $panel=DB::table('inventories')->where('category','Panels')->get();
+        $trim=DB::table('inventories')->where('category','Trim')->get();
 
-        $order=session()->get('order');
-        $panels=session()->get('panels');
-        $trim=session()->get('trim');
-        $cart=session()->get('cart');
 
-        $customer = DB::table('customers')
-            ->where('name',$order['customerName'])->first();
-            session()->put('customer', $customer);
-
-            return view ('order-forms.panels', compact('panelId','inventory','order','rolls','panels','trim','customer','cart'));
+        return view ('order-forms.setCustomer', compact('orders', 'customers','rolls', 'inv','panel','trim'));
 
     }
 
-    public function addPanel(Request $request)
+    public function quoteOrder(Request $request)
     {
-        $request= $request->except('_token');
-        $order = session()->get('order');
-        $rolls = DB::table('rolls')->get();
-        $sn = $request['sn'];
-        $rollSn = $request['sn'];
-        $remain = DB::table('rolls')->where('sn', $sn)->value('remaining');
-        $id = DB::table('rolls')->where('sn', $sn)->value('id');
-        $customer = DB::table('customers')
-            ->where('name',$order['customerName'])->first();
-        $inventory = Inventory::where('category', 'Panels')
-        ->orderBy('category')->get();
-        $currentRollColor = DB::table('rolls')->where('sn', $sn)->value('color');
-        $currentRollGauge = DB::table('rolls')->where('sn', $sn)->value('gauge');
-        $roll= session()->get('roll');
-        $panels = session()->get('panels');
-        $panelId = ++$request['id'];
-        $trim= session()->get('trim');
+        // dd($request);
+        $request=$request->except('_token');
+        $customerName=$request['customerName'];
+        $orderid=$request['id'];
 
-        $remove = ((($request['ft'] * 12) + $request['in']) * $request['quantity']);
-        $remain -= $remove;
+        Schema::dropIfExists($customerName.'/'.$orderid);
+        Schema::create($customerName.'/'.$orderid , function (Blueprint $table) {
+            $table->integer('id')->nullable();
+            $table->string('category')->nullable();
+            $table->string('sn')->nullable();
+            $table->string('color')->nullable();
+            $table->string('gauge')->nullable();
+            $table->string('desc')->nullable();
+            $table->integer('ft')->nullable()->default(0);
+            $table->integer('in')->nullable()->default(0);
+            $table->integer('quantity')->nullable();
+            $table->float('ppu')->nullable();
+            $table->float('total')->nullable();
+        });
+        ksort($request['order']);
+        $table = $request['order'];
+        $order = array();
 
+        foreach ($table as $row) {
 
+            if (isset($row['sn'])){
+                $color = DB::table('rolls')->where('sn', $row['sn'])->value('color');
+                $gauge = DB::table('rolls')->where('sn', $row['sn'])->value('gauge');
+            }
 
-        // dd($roll);
-        $quantity = $request['quantity'];
+            $inv = DB::table('inventories')->where('desc', $row['desc'])->value('ppu');
 
-        if (isset($roll[$id])){
-            $roll[$id]['available'] -= $remove;
+            if($row['category'] == 'Panels'){
+                $order[$row['row']]['id'] = $row['row'];
+                $order[$row['row']]['category'] = 'Panels' ;
+                $order[$row['row']]['sn'] = $row['sn'];
+                $order[$row['row']]['color'] = $color;
+                $order[$row['row']]['gauge'] = $gauge;
+                $order[$row['row']]['desc'] = $row['desc'];
+                $order[$row['row']]['ft'] = $row['ft'];
+                $order[$row['row']]['in'] = $row['in'];
+                $order[$row['row']]['quantity'] = $row['quantity'];
+                $order[$row['row']]['ppu'] = $inv;
+                $order[$row['row']]['total'] = '0';
+            }
+            if($row['category'] == 'Trim'){
+                $order[$row['row']]['id'] = $row['row'];
+                $order[$row['row']]['category'] = 'Trim' ;
+                $order[$row['row']]['sn'] = $row['sn'];
+                $order[$row['row']]['color'] = $color;
+                $order[$row['row']]['gauge'] = $gauge;
+                $order[$row['row']]['desc'] = $row['desc'];
+                $order[$row['row']]['ft'] = '0';
+                $order[$row['row']]['in'] = '0';
+                $order[$row['row']]['quantity'] = $row['quantity'];
+                $order[$row['row']]['ppu'] = $inv;
+                $order[$row['row']]['total'] = '0';
+            }
+            if($row['category'] == 'Other'){
+                $category=DB::table('inventories')->where('desc',$row['desc'])->value('category');
+                $order[$row['row']]['id'] = $row['row'];
+                $order[$row['row']]['category'] = $category;
+                $order[$row['row']]['sn'] = '';
+                $order[$row['row']]['color'] = '';
+                $order[$row['row']]['gauge'] = '';
+                $order[$row['row']]['desc'] = $row['desc'];
+                $order[$row['row']]['ft'] = '0';
+                $order[$row['row']]['in'] = '0';
+                $order[$row['row']]['quantity'] = $row['quantity'];
+                $order[$row['row']]['ppu'] = $inv;
+                $order[$row['row']]['total'] = '0';
+            }
         }
-        else {
-            $roll[$id] = [
-                'sn' => $request['sn'],
-                'color' => $currentRollColor,
-                'gauge' => $currentRollGauge,
-                'available' => $remain
-            ];
-        }
+        // dd($order);
+        DB::table($customerName.'/'.$orderid)->insert($order);
+        DB::table('orders')->insertOrIgnore([
+            'id' => $orderid,
+            'cust_name' => $customerName,
+            'status' => 'Started'
+        ]);
+        $customer = DB::table('customers')->where('name', $customerName)->first();
+        $panels = DB::table($customerName.'/'.$orderid)->where('category','Panels')->get();
+        $trim = DB::table($customerName.'/'.$orderid)->where('category','Trim')->get();
+        $other = DB::table($customerName.'/'.$orderid)
+                        ->where('category','!=','Panels')
+                        ->where('category','!=','Trim')
+                        ->get();
 
+        session()->put('customer', $customer);
+        session()->put('order', $orderid);
 
+        return view('order-forms.adjustQuote',compact('customer','order','panels','trim','other','orderid'));
 
-        if(is_null($panels)) {
-
-            $panels = array();
-
-        }
-        $panels[$panelId] = [
-            'id' => $panelId,
-            'sn' => $roll[$id]['sn'],
-            'color' => $currentRollColor,
-            'gauge' => $currentRollGauge,
-            'desc' => $request['desc'],
-            'ft'=> $request['ft'],
-            'in' => $request['in'],
-            'quantity' => $request['quantity'],
-            'ppu' => $request['ppu']];
-
-
-        session()->put('roll', $roll);
-        session()->put('panels', $panels);
-        return view('order-forms.panels', compact('roll','order','rolls','inventory','panels', 'panelId','customer'));
     }
 
-    public function toTrim()
-    {
-        $order=session()->get('order');
-
-        if (!session()->exists('panels')) {
-            $trimId=0;
-        }
-        else {
-            $trimId = session()->get('panels');
-            $trimkey = krsort($trimId);
-            $trimId = array_key_last($trimId);
-        }
-        $customer = DB::table('customers')
-            ->where('name',$order['customerName'])->first();
-
-        $inventory = DB::table('inventories')->where('category','Trim')->get();
-        // dd($inventory);
-        $rolls=DB::table('rolls')->get();
-
-        $order=session()->get('order');
-        $panels=session()->get('panels');
-        $trim=session()->get('trim');
-
-
-            return view ('order-forms.trim', compact('customer','inventory','order','rolls','panels','trim','trimId'));
-
-    }
-
-    public function addTrim(Request $request)
+    public function totalQuote(Request $request)
     {
         $request=$request->except('_token');
-        $order = session()->get('order');
-        $rolls = DB::table('rolls')->get();
-        $sn = $request['sn'];
-        $id = DB::table('rolls')->where('sn', $sn)->value('id');
-        $remain = DB::table('rolls')->where('sn', $sn)->value('remaining');
-        $inventory = DB::table('inventories')->where('category','Trim')->get();
-        $currentRollColor = DB::table('rolls')->where('sn', $sn)->value('color');
-        $currentRollGauge = DB::table('rolls')->where('sn', $sn)->value('gauge');
-        $trimId = ++$request['id'];
-        $roll= session()->get('roll');
-        $trim = session()->get('trim');
-        $panels = session()->get('panels');
 
-        // dd($request['ppu']);
-
-
-
-        if(is_null($trim)) {
-            $trim = array();
-            $trim[$trimId] = [
-                    'id' => $trimId,
-                    'sn' => $sn,
-                    'color' => $currentRollColor,
-                    'gauge' => $currentRollGauge,
-                    'desc' => $request['desc'],
-                    'ppu' => $request['ppu'],
-                    'quantity' => $request['quantity'],
-
-                ];
-
-        }
-        else {
-            $trim[$trimId] = [
-                'id' => $trimId,
-                'sn' => $sn,
-                'color' => $currentRollColor,
-                'gauge' => $currentRollGauge,
-                'desc' => $request['desc'],
-                'quantity' => $request['quantity'],
-                'ppu' => $request['ppu']
-            ];
-        }
-
-        $customer = DB::table('customers')
-        ->where('name',$order['customerName'])->first();
-
-        session()->put('trim', $trim);
-
-        return view('order-forms.trim', compact('roll','order','rolls','inventory','panels', 'trimId','trim', 'customer'));
-
-
-    }
-
-    public function toCart()
-    {
-        $order=session()->get('order');
-        $panels=session()->get('panels');
-        $trim=session()->get('trim');
-        $cart=session()->get('cart');
-        $inventory = DB::table('inventories')
-            ->where('category','<>','Panels')
-            ->where('category','<>','Trim')
-            ->get();
-        // dd($inventory);
-        $rolls=DB::table('rolls')->get();
-        $customer = DB::table('customers')
-            ->where('name',$order['customerName'])->first();
-
-
-
-            return view ('order-forms.order_form', compact('customer','inventory','order','rolls','panels','trim','cart'));
-
-    }
-
-    public function addItemToCart(Request $request)
-    {
-        $request=$request->except('_token');
-        $order = session()->get('order');
-        $inventory = DB::table('inventories')
-            ->where('category','<>','Panels')
-            ->where('category','<>','Trim')
-            ->get();
-        $roll= session()->get('roll');
-        $trim = session()->get('trim');
-        $cart = session()->get('cart');
-        $panels = session()->get('panels');
-        $id = $request['id'];
-        // dd($inventory);
-
-        $quantity = $request['quantity'];
-
-        if(is_null($cart)) {
-            $cart = array();
-            $cart[$id] = [
-                    'id' => $request['id'],
-                    'category' => $request['category'],
-                    'quantity' => $request['quantity'],
-                    'available' => $request['available'],
-                    'desc' => $request['desc'],
-                    'ppu' => $request['ppu'],
-
-                ];
-
-        }
-        else {
-            $cart[$id] = [
-                'id' => $request['id'],
-                'category' => $request['category'],
-                'quantity' => $request['quantity'],
-                'available' => $request['available'],
-                'desc' => $request['desc'],
-                'ppu' => $request['ppu'],
-        ];
-        }
-        session()->put('trim', $trim);
-        session()->put('roll', $roll);
-        session()->put('panels', $panels);
-        session()->put('cart', $cart);
-        $customer = DB::table('customers')
-        ->where('name',$order['customerName'])->first();
-
-
-        return view('order-forms.order_form', compact('roll','order','inventory','panels', 'trim','cart', 'customer'));
-
-
-    }
-
-    public function deletePanel(Request $request)
-    {
-        $panels=session()->get('panels');
-
-        $panels[$request->id]['quantity']= $panels[$request->id]['quantity']-$request->quantity;
-
-        session()->put('panels', $panels);
-
-        return redirect(route('toPanels'));
-    }
-    public function deleteTrim(Request $request)
-    {
-        $trim=session()->get('trim');
-
-        $trim[$request->id]['quantity']= $trim[$request->id]['quantity']-$request->quantity;
-
-        session()->put('trim', $trim);
-
-        return redirect(route('toTrim'));
-
-
-    }
-    public function deleteMisc(Request $request)
-    {
-        $cart=session()->get('cart');
-        // dd($request->id);
-        $cart[$request->id]['quantity']= $cart[$request->id]['quantity']-$request->quantity;
-
-        session()->put('cart', $cart);
-
-        return redirect(route('toCart'));
-
-
-    }
-
-    public function submitToQuote()
-    {
-        $order = session()->get('order');
-        $panels = session()->get('panels');
-        $cart = session()->get('cart');
-        $trim = session()->get('trim');
         $customer = session()->get('customer');
-        $row = 1;
-        $ordermaker = array();
-        foreach ($panels as $panel){
-            $ordermaker[$row] = [
-                'category' => 'Panels',
-                'sn' => $panel['sn'],
-                'itemId' => '',
-                'color' => $panel['color'],
-                'gauge' => $panel['gauge'],
-                'desc' => $panel['desc'],
-                'ft' => $panel['ft'],
-                'in' => $panel['in'],
-                'quantity' => $panel['quantity'],
-                'ppu' => $panel['ppu'],
-                'total' => $panel['quantity']*$panel['ppu']
-            ];
-            $row = ++$row;
+        $orderid = session()->get('order');
+        $tableName = $customer->name.'/'.$orderid;
+        $order = DB::table($tableName)->get();
+        foreach ($request as $line)
+        {
+            // dd($request);
+            $i = $line['id'];
+
+            $order[$i]->ppu = $line['ppu'];
+
+            DB::table($tableName)->updateOrInsert(['id' =>$line['id']],['ppu' => $line['ppu']]);
         }
-        foreach ($trim as $item){
-            $ordermaker[$row] = [
-                'category' => 'Trim',
-                'sn' => $item['sn'],
-                'itemId' => '',
-                'color' => $item['color'],
-                'gauge' => $item['gauge'],
-                'desc' => $item['desc'],
-                'ft' => '',
-                'in' => '',
-                'quantity' => $item['quantity'],
-                'ppu' => $item['ppu'],
-                'total' => $item['quantity']*$item['ppu']
+        $sub = 0;
+        foreach ($order as $row){
+            $total = $row->ppu*$row->quantity;
+            if ($row->category == 'Panels'){
 
-            ];
-            $row = ++$row;
+                $length = $row->ft + ($row->in/12);
+                $total = $length*$total;
+
+            }
+
+            DB::table($tableName)->updateOrInsert(['id' =>$row->id],['total' => $total]);
+            $sub += $total;
         }
-        
-        foreach ($cart as $item){
-            $ordermaker[$row] = [
-                'category' => $item['category'],
-                'sn' => '',
-                'itemId' => $item['id'],
-                'color' => '',
-                'gauge' => '',
-                'desc' => $item['desc'],
-                'ft' => '',
-                'in' => '',
-                'quantity' => $item['quantity'],
-                'ppu' => $item['ppu'],
-                'total' => $item['quantity']*$item['ppu']
-
-            ];
-            $row = ++$row;
-        }
-
-        $customerName = str_replace(' ','',$order['customerName']);
-
-        $tableName = $customerName.'_order_'.$order['orderId'];
-        Schema::dropIfExists($tableName);
-
-        Schema::create($tableName, function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('category');
-            $table->string('sn')->nullable();
-            $table->string('itemId')->nullable();
-            $table->string('color')->nullable();
-            $table->string('gauge')->nullable();
-            $table->string('desc');
-            $table->string('ft')->nullable();
-            $table->string('in')->nullable();
-            $table->string('quantity');
-            $table->double('ppu');
-            $table->double('total');
-            $table->timestamps();
-        });
-
-        foreach ($ordermaker as $line) {
-            DB::table($tableName)->insert([$line]);
-        }
-        $order['cust_name']= $order['customerName'];
-        unset($order['customerName']);
-        unset($order['orderId']);
-
-            DB::table('orders')->insert($order);
-
-
-            $quote = DB::table($tableName)->get();
-
-        return redirect(route('viewQuote'));
+            DB::table('orders')->where('id',$orderid)->update(['status' => 'Estimated']);
+            // $order = DB::table($tableName)->get();
+            return view('order-forms.view', compact('order','customer','orderid','sub'));
     }
 
-    public function viewQuote()
-    {
-        $order = session()->get('order');
-        $customerName = str_replace(' ','',$order['customerName']);
-        $orderContents = DB::table($customerName.'_order_'.$order['orderId'])->get();
-        $total = 0;
-        foreach ($orderContents as $ppu){
-            $total += ($ppu->ppu*$ppu->quantity);
 
-        }
-
-        return view('order-forms.quote',compact('orderContents', 'order', 'total'));
-
-    }
-
-    public function orderQuoted(){
-
-        $tableName = $order['cust_name'].'_order_'.$order['order_id'];
-        Schema::create($tableName, function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('category');
-            $table->string('sn')->nullable();
-            $table->string('itemId')->nullable();
-            $table->string('color')->nullable();
-            $table->string('gauge')->nullable();
-            $table->string('desc');
-            $table->string('ft')->nullable();
-            $table->string('in')->nullable();
-            $table->string('quantity');
-            $table->double('ppu');
-            $table->timestamps();
-        });
-
-    }
-
-    public function updateOrderItem(Request $request) {
-
-        $order=session()->get('order');
-        $customerName = str_replace(' ','',$order['customerName']);
-        $orderContents = DB::table($customerName.'_order_'.$order['orderId'])->where('id',$request->id)->update(['ppu' => $request->ppu]);
-        $total = 0;
-        $orderContents = DB::table($customerName.'_order_'.$order['orderId'])->get();
-
-        foreach ($orderContents as $ppu){
-            $total += ($ppu->ppu*$ppu->quantity);
-
-        }
-
-        return view('order-forms.quote',compact('orderContents', 'order','total'));
-
-
-    }
-
-    public function submitOrder()
-    {
-        $order=session()->get('order');
-        $customerName = str_replace(' ','',$order['customerName']);
-        $total = 0;
-        $orderContents = DB::table($customerName.'_order_'.$order['orderId'])->get();
-
-        foreach ($orderContents as $ppu){
-            $total += ($ppu->ppu*$ppu->quantity);
-
-        }
-        return view('order-forms.final',compact('orderContents', 'order','total'));
-
-    }
-
-    public function clearSession(){
-        session()->forget('panels');
-        session()->forget('trim');
-        session()->forget('cart');
-        session()->forget('roll');
-        session()->forget('order');
-
-        return view('dashboard');
-    }
 }
-

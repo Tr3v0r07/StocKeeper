@@ -6,39 +6,39 @@
                 <option selected value="">All</option>
             @else
                 <option value="">All</option>
-            @endif    
-            @if ($curcat == 'fastners')
-                <option selected value="fastners">Fastners</option>
-            @else
-                <option value="fastners">Fastners</option>
             @endif
-            @if ($curcat == 'boots')
-                <option selected value="boots">Boots</option>
+            @if ($curcat == 'Fastners')
+                <option selected value="Fastners">Fastners</option>
             @else
-                <option value="boots">Boots</option>
+                <option value="Fastners">Fastners</option>
             @endif
-            @if ($curcat == 'misc')
-                <option selected value="misc">Miscellaneous</option>
+            @if ($curcat == 'Boots')
+                <option selected value="Boots">Boots</option>
             @else
-                <option value="misc">Miscellaneous</option>
+                <option value="Boots">Boots</option>
             @endif
-            @if ($curcat == 'trim')
-                <option selected value="trim">Trim</option>
+            @if ($curcat == 'Misc')
+                <option selected value="Misc">Miscellaneous</option>
             @else
-                <option value="trim">Trim</option>
+                <option value="Misc">Miscellaneous</option>
             @endif
-            @if ($curcat == 'panels')
-                <option selected value="panels">Panels</option>
+            @if ($curcat == 'Trim')
+                <option selected value="Trim">Trim</option>
             @else
-                <option value="panels">Panels</option>
+                <option value="Trim">Trim</option>
+            @endif
+            @if ($curcat == 'Panels')
+                <option selected value="Panels">Panels</option>
+            @else
+                <option value="Panels">Panels</option>
             @endif
         @else
             <option selected value="">All</option>
-            <option value="fastners">Fastners</option>
-            <option value="boots">Boots</option>
-            <option value="misc">Miscellaneous</option>
-            <option value="trim">Trim</option>
-            <option value="panels">Panels</option>
-        @endif    
+            <option value="Fastners">Fastners</option>
+            <option value="Boots">Boots</option>
+            <option value="Misc">Miscellaneous</option>
+            <option value="Trim">Trim</option>
+            <option value="Panels">Panels</option>
+        @endif
     </select>
 </form>
