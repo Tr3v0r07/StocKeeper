@@ -17,35 +17,15 @@
 
 @section('customerSearch')
 
-<style>
-    tr:nth-child(even) {
-        background-color: #eee;
-    }
-    tr:nth-child(odd) {
-        background-color: #fff;
-    }
-</style>
 
-<table class="m-auto grid-cols-1">
-    <thead class="contents">
-        <tr class=" rounded-t grid-cols-5">
-            <td class="px-2 rounded-tr max-w-min col-start-1 text-lg"><strong>Customer<br>Name</strong></td>
-            <td class="px-2 max-w-min col-start-2 text-lg"><strong>Contact<br>Name</strong></td>
-            <td class="px-2 max-w-min col-start-3 text-lg"><strong>Phone<br>Number</strong></td>
-            <td class="px-2 max-w-min col-start-4 text-lg"><strong>Email<br>Address</strong></td>
-            <td class="px-2 rounded-tl max-w-min col-start-5 text-lg"><strong>Street<br>Address</strong></td>
-        </tr>
-    </thead>
-    <tbody class="contents">
+<div class="m-auto">
+    <div class=" grid auto-cols-min grid-cols-2 ">
+            <div class="px-2  col-start-1 text-lg"><strong>Customer<br>Name</strong></div>
+            <div class="px-2 col-start-2 text-lg"><strong>Contact<br>Name</strong></div>
         @foreach ($customers as $customer)
-            <tr class="grid-cols-5">
-                <td class="px-2 col-start-1 max-w-min"><a href="customers/{{ $customer->id }}">{{ $customer->name }}</a></td>
-                <td class="px-2 col-start-2 max-w-min">{{ $customer->contact }}</td>
-                <td class="px-2 col-start-3 max-w-min">{{ $customer->phone }}</td>
-                <td class="px-2 col-start-4 max-w-min">{{ $customer->email }}</td>
-                <td class="px-2 col-start-5 max-w-min">{{ $customer->street_1 }}, {{ $customer->street_2 }}<br>{{ $customer->city }}, {{ $customer->state }} {{ $customer->zip }}</td>
-            </tr>
+            <div class="px-2 col-start-1 "><a href="customers/{{ $customer->id }}">{{ $customer->name }}</a></div>
+            <div class="px-2 col-start-2 ">{{ $customer->contact }}</div>
         @endforeach
-    </tbody>
-</table>
+    </div>
+</div>
 @endsection

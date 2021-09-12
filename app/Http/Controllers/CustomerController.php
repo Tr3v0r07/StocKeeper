@@ -26,7 +26,7 @@ class CustomerController extends Controller
 
         $customer = Customer::where('id',$id)->first();
 
-        $orders = Order::where('cust_name', $customer->name)->get('id','status');
+        $orders = Order::where('cust_name', $customer->name)->get();
 
         return view('customers.view', compact('customer','orders'));
 

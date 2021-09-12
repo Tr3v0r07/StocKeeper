@@ -88,7 +88,10 @@
                                         {{ __('Inventory') }}
                                     </x-dropdown-link>
                                     <x-dropdown-link :href="route('new-inv')">
-                                        {{ __('Add New') }}
+                                        {{ __('New Items') }}
+                                    </x-dropdown-link>
+                                    <x-dropdown-link :href="route('new-inv')">
+                                        {{ __('Receive Shipment') }}
                                     </x-dropdown-link>
                                     <x-dropdown-link :href="route('new-roll')">
                                         {{ __('Rolls') }}
@@ -199,7 +202,7 @@
                 <x-slot name="name">Inventory</x-slot>
                 <x-slot name="children" >
                     <div class="mb-3"><a href="{{ route('view-inv') }}">View</a><br></div>
-                    <div class="my-3"><a href="{{ route('new-inv') }}">New</a><br></div>
+                    <div class="my-3"><a href="{{ route('new-inv') }}">New Items</a><br></div>
                     <div class="mt-3"><a href="{{ route('new-roll') }}">Rolls</a></div>
                 </x-slot>
             </x-responsive-dropdown>
