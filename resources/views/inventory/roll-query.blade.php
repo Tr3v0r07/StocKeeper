@@ -1,15 +1,15 @@
 
 
-<div class="grid grid-cols-5 m-auto">
-        <div class="col-start-2">Roll Number</div>
-        <div class="col-start-3">Color</div>
-        <div class="col-start-4">Remaining</div>
+<div class="grid grid-cols-5 m-auto p-2 bg-white rounded shadow">
+        <div class="col-start-2 font-bold">Roll Number</div>
+        <div class="col-start-3 font-bold">Color</div>
+        <div class="col-start-4 font-bold">Remaining</div>
     @foreach ($rolls as $roll)
-
+        <div class="grid grid-cols-5 col-span-5">
             <div class="col-start-2">{{ $roll->sn }}</div>
             <div class="col-start-3">{{ $roll->color }}</div>
             <div class="col-start-4">{{ ($roll->remaining - ($roll->remaining % 12))/12 }}' {{ $roll->remaining % 12 }}"</div>
-
+        </div>
     @endforeach
 
 </div>

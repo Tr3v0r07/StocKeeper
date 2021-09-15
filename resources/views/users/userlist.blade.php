@@ -4,10 +4,10 @@
 <div class="bg-white shadow-md rounded p-3">
     <style>
         tr:nth-child(even) {
-            background-color: #eee;
+            background-color: rgba(229, 231, 235);}
         }
         tr:nth-child(odd) {
-            background-color: #fff;
+            background-color: rgba(255, 255, 255);
         }
     </style>
 <table>
@@ -21,11 +21,12 @@
     <tbody>
         @foreach ($users as $user)
             <tr>
-                <td class='p-3'>{{ $user->first_name }}</td>
-                <td class='p-3'>{{ $user->last_name }}</td>
-                <td class='p-3'>{{ $user->email }}</td>
-                <td class='p-3'>{{ $user->role }}</td>
-                {{-- <td class='p-3'><a href="/edit_user/{{ $user->id }}">Edit</a></td> --}}
+
+                        <td class='p-3'>{{ $user->first_name }}</td>
+                        <td class='p-3'>{{ $user->last_name }}</td>
+                        <td class='p-3'>{{ $user->email }}</td>
+                        <td class='p-3'>{{ $user->role }}</td>
+                        <td class='p-3'><a href="user/edit/{{ $user->id }}">Edit</a></td>
             </tr>
         @endforeach
 

@@ -33,6 +33,7 @@ Route::get('/newuser', function () {
     return view('users.newUser');
 })->middleware(['auth'])->name('newUserForm');
 Route::post('/user', ([UserController::Class, 'newUser']))->middleware(['auth'])->name('newUser');
+Route::get('/user/edit/{id}', ([UserController::Class, 'edit']))->middleware(['auth'])->name('editUser');
 
 
 Route::get('/orders', ([OrderController::Class, 'all']))->middleware(['auth'])->name('orders');
@@ -67,6 +68,7 @@ Route::get('/customers/new', ([CustomerController::Class, 'new']))->middleware([
 Route::post('/customers', ([CustomerController::Class, 'add']))->middleware(['auth'])->name('add');
 Route::get('/customers/{id}', ([CustomerController::Class, 'viewCustomer']))->middleware(['auth'])->name('viewCustomer');
 Route::get('/customers/{id}/edit', ([CustomerController::Class, 'alter']))->middleware(['auth'])->name('edit');
+Route::post('/customers/edit/submit', ([CustomerController::Class, 'edit']))->middleware(['auth'])->name('customerEdit');
 Route::get('/customers/{id}/delete', ([CustomerController::Class, 'delete']))->middleware(['auth'])->name('del_cust');
 
 Route::get('inventory/', ([InventoryController::Class, 'view']))->middleware(['auth'])->name('view-inv');

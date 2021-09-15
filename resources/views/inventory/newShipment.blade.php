@@ -12,7 +12,7 @@
                 ++i;
         };
     </script>
-
+<div class=" p-2 bg-white rounded shadow ">
     <form method="POST" action={{route('newShip')}}  id="orderform">
         @csrf
 
@@ -37,6 +37,6 @@
         @endforeach
     </datalist>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js" ></script>
-
+</div>
 @endsection
 

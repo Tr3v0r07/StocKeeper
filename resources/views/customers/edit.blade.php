@@ -1,37 +1,31 @@
 @extends('customers.customers')
 
 @section('editCustomer')
-    {{-- <script>
-        $(function () {
+<script>
+    $(function () {
+       $('#individual').on("click", function () {
+         $('#contactWrapper').toggleClass('hidden');
+         $('#contactWrapper').toggleClass('contents');
+       });
+    });
+</script>
 
-        $('#individual').on("click", function () {
-            $ind = $('#individual').val();
-
-            if($ind) {
-                $('#contact').css('display','block');
-                $('#contactLabel').css('display','block');
-            }
-            if($ind == false) {
-                $('#contact').css('display','hidden');
-                $('#contactLabel').css('display','hidden');
-            };
-
-        });
-
-        });
-    </script> --}}
-
-
-        <form method="POST" action="{{ route('add') }}" class='grid grid-cols-3 gap-x-3 p-2.5'>
+<div class="m-5 p-3 bg-white shadow-md rounded">
+        <form method="POST" action="{{ route('customerEdit') }}" class='grid grid-cols-3 gap-x-3 p-2.5'>
             @csrf
+
+        <x-input id="id" readonly placeholder="Individual or Business Name" class="hidden mt-1 col-span-2" type="text" name="id" value="{{ $customer->id }}"  />
+
         <x-label for="name" :value="__('Customer Name')" class="col-span-2"></x-label>
         <x-label for="individual" :value="__('Business?')"></x-label>
 
         <x-input id="name" placeholder="Individual or Business Name" class="block mt-1 col-span-2" type="text" name="name" value="{{ $customer->name }}" autofocus />
         <input id="individual" class="block mt-1 rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" type="checkbox" name="individual" value="{{ $customer->individual }}" />
 
-        <x-label id="contactLabel" for="contact" class="col-span-2 mt-2" :value="__('Contact Name')" style="display: none"></x-label>
-        <x-input id="contact" placeholder="Contact for Business Customers" class="mt-1 col-span-2" type="text" name="contact" value="{{ $customer->contact }}" style="display: none" />
+        <div id="contactWrapper" class="hidden">
+            <x-label id="contactLabel" for="contact" class=" col-span-2 mt-2" :value="__('Contact Name')" ></x-label>
+            <x-input id="contact" placeholder="Contact for Business Customers" class="mt-1 col-span-2" type="text" name="contact" value="{{ $customer->contact }}"/>
+        </div>
 
         <x-label for="phone" class="col-span-2 mt-2" :value="__('Phone Number')"></x-label>
         <x-input id="phone" placeholder="Phone Number" class="block mt-1 col-span-2" type="text" name="phone" value="{{ $customer->phone }}" />
@@ -66,4 +60,5 @@
         </x-button>
 
         </form>
-@endsection
+    </div>
+        @endsection

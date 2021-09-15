@@ -25,17 +25,29 @@ class UserController extends Controller
 
     public function newUser(Request $request)
     {
-        $nuser = new User;
+        if($request->has('password')){
+            $nuser = new User;
 
-        $nuser->first_name = $request->first_name;
-        $nuser->last_name = $request->last_name;
-        $nuser->email = $request->email;
-        $nuser->password = Hash::make($request->password);
-        $nuser->role = $request->role;
+            $nuser->first_name = $request->first_name;
+            $nuser->last_name = $request->last_name;
+            $nuser->email = $request->email;
+            $nuser->password = Hash::make($request->password);
+            $nuser->role = $request->role;
 
-        $nuser->save();
+            $nuser->save();
+        }
+        else {
+            $user = $request->all()->except('_token');
 
+            DB::table('users')->where('id',$user->id)->update([
+                'first_name' => $user->first_name,
+                'last_name' => $user->last_name,
+                'email' => $user->email,
+                'role' => $user->role
 
+            ]);
+
+        }
         return $this->index();
 
 
@@ -44,6 +56,12 @@ class UserController extends Controller
     public function dashview(){
 
         return view('users.admindash');
+    }
+    public function edit($id)
+    {
+       $user = DB::table('users')->where('id',$id)->first();
+
+       return view('users.newUser', compact('user'));
     }
 
 }

@@ -2,7 +2,7 @@
 
 @section('new-roll')
 @include('inventory.roll-query')
-<div class="m-auto ">
+<div class=" p-6 mt-2 bg-white rounded shadow ">
     <form action="{{ route('roll-store') }}" class="grid gap-3 grid-cols-5 m-auto">
         <x-label for="sn" :value="__('Roll Number')" class="mt-2 row-start-1 col-start-1"></x-label>
         <x-label for="color" :value="__('Color')" class="mt-2 row-start-1 col-start-2"></x-label>

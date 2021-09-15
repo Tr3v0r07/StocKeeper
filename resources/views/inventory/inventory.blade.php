@@ -19,7 +19,7 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="m-auto p-6 bg-white mb-4 border-gray-200">
+                <div class=" p-6 bg-gray-200 m-4">
 
                     @yield('view')
                     @yield('new-inv')

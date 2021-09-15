@@ -74,4 +74,29 @@ class CustomerController extends Controller
         return redirect()->back();
 
     }
+
+    public function edit(Request $request)
+    {
+
+        $customer=$request->except('_token');
+            if(!isset($customer['individual'])){
+                $customer['individual'] = 0;
+            }
+
+        DB::table('customers')->where('id',$customer['id'])->update([
+            'name' => $customer['name'],
+            'individual' => $customer['individual'],
+            'contact' => $customer['contact'],
+            'phone' => $customer['phone'],
+            'email' => $customer['email'],
+            'street_1' => $customer['street_1'],
+            'street_2' => $customer['street_2'],
+            'city' => $customer['city'],
+            'state' => $customer['state'],
+            'zip' => $customer['zip']
+        ]);
+        $customers = DB::table('customers')->get();
+
+        return redirect()->route('customers');
+    }
 }

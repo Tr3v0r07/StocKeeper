@@ -1,6 +1,8 @@
 @extends('inventory.inventory')
 
 @section('new-inv')
+<div class=" p-3 bg-white rounded shadow ">
+
 <form action="{{ route('store') }}">
     <div class="grid grid-cols-4 auto-cols-auto gap-3 mt-4">
         <x-label for="category" :value="__('Category*')" class="mt-2 col-span-1"></x-label>
@@ -23,4 +25,5 @@
         <button type="submit" class=" m-auto justify-center row-start-5 col-start-4 inline-flex px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150'">Add</button>
     </div>
 </form>
+</div>
 @endsection

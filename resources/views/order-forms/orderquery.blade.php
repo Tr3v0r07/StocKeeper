@@ -12,15 +12,15 @@
             <tbody>
                 <style>
                     tr:nth-child(even) {
-                        background-color: #eee;
+                        background-color: rgba(229, 231, 235);}
                     }
                     tr:nth-child(odd) {
-                        background-color: #fff;
+                        background-color: rgba(255, 255, 255);
                     }
                 </style>
             <div class="container">
                 @foreach ($orders as $order)
-                    <tr  class="rounded-2xl">
+                    <tr  class="rounded">
                         <td class='p-3 text-left'><a href="orders/view/{{ $order->id }}">{{ $order->id }}</a></td>
                         <td class='p-3 text-left'>{{ $order->cust_name }}</td>
                         <td class='p-3 text-left'>{{ $order->status }}</td>
