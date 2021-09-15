@@ -45,11 +45,11 @@
         <x-label for="street_2" class="col-span-2 mt-2" :value="__('Address 2 (Optional)')"></x-label>
         <x-input id="street_2" placeholder="Optional" class="block mt-1 col-span-2" type="text" name="street_2" value="{{ $customer->street_2 }}" />
 
-        <x-label for="city" class="col-span-1 mt-2" :value="__('City')"></x-label>
+        <x-label for="city" class="col-span-1 col-start-1 mt-2" :value="__('City')"></x-label>
         <x-label for="state" class="mt-2" :value="__('State')"></x-label>
         <x-label for="zip" class="mt-2" :value="__('Zip')"></x-label>
 
-        <x-input id="city" placeholder="City" class="block mt-1 col-span-1" type="text" name="city" value="{{ $customer->city }}" />
+        <x-input id="city" placeholder="City" class="block mt-1 col-span-1 col-start-1" type="text" name="city" value="{{ $customer->city }}" />
         <select id="state" placeholder="Select" class="block mt-1 rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" type="select" name="state" value="{{ $customer->state }}" >
             @foreach ($states as $state)
                 @if ($state->code == $customer->state)
@@ -61,7 +61,7 @@
             @endforeach
         </select>
         <x-input id="zip" placeholder="zip" class="block mt-1 " type="text" name="zip" value="{{ $customer->zip }}" />
-        <x-button class="mt-3 w-5/6 justify-center m-auto">
+        <x-button class="mt-3 col-start-3 min-w-min justify-center float-right ml-auto">
             {{ __('Enter') }}
         </x-button>
 

@@ -5,28 +5,39 @@
 
 
 <div class="sm:grid sm:grid-cols-7 sm:gap-5">
-    <div class="sm:col-span-2 p-3 pb-12 block mb-5 bg-white rounded">
-        <div>{{ $customer->name }}</div>
+    <div class="sm:col-span-2 p-6 pb-12 grid grid-cols-3 mb-5 bg-white rounded">
+        <div class="col-span-2">{{ $customer->name }}</div>
     @if (isset($customer->contact))
-        <div>{{ $customer->contact }}</div>
-    @endif
-        <div>{{ $customer->phone }}</div>
-        <div>{{ $customer->email }}</div>
-        <div>{{ $customer->street_1 }}</div>
+            <div class="col-span-2">{{ $customer->contact }}</div>
+            <div class="col-span-3">{{ $customer->phone }}</div>
+            <div class="col-span-2">{{ $customer->email }}</div>
+            <div class="col-span-2">{{ $customer->street_1 }}</div>
         @if (!is_null($customer->street_2))
-        <div>{{ $customer->street_2 }}</div>
+            <div class="col-span-3">{{ $customer->street_2 }}</div>
+            <div class="col-span-3">{{ $customer->city }}, {{ $customer->state }} {{ $customer->zip }}</div>
+        @else
+            <div class="col-span-3">{{ $customer->city }}, {{ $customer->state }} {{ $customer->zip }}</div>
+        @endif
+    @else
+            <div class="col-span-2">{{ $customer->phone }}</div>
+            <div class="col-span-2">{{ $customer->email }}</div>
+            <div class="col-span-2">{{ $customer->street_1 }}</div>
+        @if (!is_null($customer->street_2))
+            <div class="col-span-2">{{ $customer->street_2 }}</div>
+            <div class="col-span-3">{{ $customer->city }}, {{ $customer->state }} {{ $customer->zip }}</div>
+        @else
+            <div class="col-span-3">{{ $customer->city }}, {{ $customer->state }} {{ $customer->zip }}</div>
+        @endif
     @endif
-        <div>{{ $customer->city }}, {{ $customer->state }} {{ $customer->zip }}</div>
-
     @admin()
-        <div class=" noprint float-left inline-flex items-center mx-auto mt-2 py-2 px-4  bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150 my-2" ><a href="customer/edit/{{ $customer->id }}">Edit</a></div>
-        <div class=" noprint float-right inline-flex items-center mt-2 py-2 px-4  bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150 my-2" ><a href="customer/delete/{{ $customer->id }}">Delete</a></div>
+        <div class=" noprint row-start-1 row-span-2 col-start-3 inline-flex items-center mx-auto mt-2 py-2 px-4  bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150 my-2" ><a href="/customers/{{ $customer->id }}/edit">Edit</a></div>
+        <div class=" noprint row-start-4 row-span-2 col-start-3 inline-flex items-center mx-auto mt-2 py-2 px-4  bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150 my-2" ><a href="/customers/{{ $customer->id }}/delete">Delete</a></div>
     @endadmin
 
     </div>
 
-    <div class="sm:col-span-5 block bg-white rounded">
-        <div class="grid sm:p-4 auto-cols-auto grid-cols-2">
+    <div class="sm:col-span-5 block my-4 p-6 bg-white rounded">
+        <div class="grid sm:p-4 m-auto auto-cols-auto grid-cols-2 gap-x-3">
             <div class="col-start-1 font-bold text-lg">Order Number</div>
             <div class="col-start-2 font-bold text-lg">Status</div>
 

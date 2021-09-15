@@ -31,5 +31,11 @@ class AppServiceProvider extends ServiceProvider
             return auth()->check() && Auth::user()->role =='Admin';
         });
 
+        Blade::if('status', function($status){
+            if(isset(session('order')->status)){
+
+            return $status == session('order')->status;
+                }});
+
     }
 }

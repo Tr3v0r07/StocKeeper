@@ -22,9 +22,7 @@ Route::get('/', function () {
     return view('auth.login');
 });
 
-Route::get('/dashboard', function () {
-    return view('users.dashboard');
-})->middleware(['auth'])->name('dashboard');
+Route::get('/dashboard', ([UserController::Class, 'dashview']))->middleware(['auth'])->name('admindashboard');
 
 Route::get('/profile', function () {
     return view('profile');
@@ -68,8 +66,8 @@ Route::get('/customers', ([CustomerController::Class, 'all']))->middleware(['aut
 Route::get('/customers/new', ([CustomerController::Class, 'new']))->middleware(['auth'])->name('new_cust');
 Route::post('/customers', ([CustomerController::Class, 'add']))->middleware(['auth'])->name('add');
 Route::get('/customers/{id}', ([CustomerController::Class, 'viewCustomer']))->middleware(['auth'])->name('viewCustomer');
-Route::get('/customers/edit/{id}', ([CustomerController::Class, 'alter']))->middleware(['auth'])->name('edit');
-Route::get('/customers/delete/{id}', ([CustomerController::Class, 'delete']))->middleware(['auth'])->name('del_cust');
+Route::get('/customers/{id}/edit', ([CustomerController::Class, 'alter']))->middleware(['auth'])->name('edit');
+Route::get('/customers/{id}/delete', ([CustomerController::Class, 'delete']))->middleware(['auth'])->name('del_cust');
 
 Route::get('inventory/', ([InventoryController::Class, 'view']))->middleware(['auth'])->name('view-inv');
 Route::post('inventory/', ([InventoryController::Class, 'view']))->middleware(['auth'])->name('category');
@@ -77,5 +75,7 @@ Route::get('inventory/new', ([InventoryController::Class, 'new']))->middleware([
 Route::get('inventory/add-roll', ([InventoryController::Class, 'newroll']))->middleware(['auth'])->name('new-roll');
 Route::get('inventory/rollstore', ([InventoryController::Class, 'storeroll']))->middleware(['auth'])->name('roll-store');
 Route::get('inventory/store', ([InventoryController::Class, 'store']))->middleware(['auth'])->name('store');
+Route::get('inventory/new/shipment', ([InventoryController::Class, 'newShipment']))->middleware(['auth'])->name('newShipment');
+Route::post('inventory/receive', ([InventoryController::Class, 'newShip']))->middleware(['auth'])->name('newShip');
 
 require __DIR__.'/auth.php';

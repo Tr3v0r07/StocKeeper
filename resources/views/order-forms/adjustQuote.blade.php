@@ -39,8 +39,7 @@
                 <div class="grid gap-3 grid-cols-10 font-bold py-1">
                     <div class="col-start-1 col-span-3 my-auto">Roll Number - Color - Gauge</div>
                     <div class="col-start-4 col-span-2 my-auto">Item Description</div>
-                    <div class="col-start-6  my-auto">Length (ft)</div>
-                    <div class="col-start-7 my-auto">(in)</div>
+                    <div class="col-start-6  my-auto">Length</div>
                     <div class="col-start-8 my-auto">Quantity</div>
                     <div class="col-start-9 my-auto">$/unit</div>
                     <div class="col-start-10 my-auto"></div>
@@ -55,8 +54,6 @@
                                 @if (!is_null($panel->ft))
                                 {{ $panel->ft }}'
                                 @endif
-                            </div>
-                            <div class="col-start-7 my-auto">
                                 @if (!is_null($panel->in))
                                 {{ $panel->in }}"
                                 @endif

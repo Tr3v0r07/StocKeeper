@@ -1,6 +1,15 @@
 @extends('users.user')
 
 @section('usertable')
+<div class="bg-white shadow-md rounded p-3">
+    <style>
+        tr:nth-child(even) {
+            background-color: #eee;
+        }
+        tr:nth-child(odd) {
+            background-color: #fff;
+        }
+    </style>
 <table>
     <thead>
         <th class='p-3'>First</th>
@@ -22,4 +31,5 @@
 
     </tbody>
 </table>
+</div>
 @endsection

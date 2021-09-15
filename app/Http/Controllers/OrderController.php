@@ -22,7 +22,7 @@ class OrderController extends Controller
     {
 
 
-        $orders = DB::table('orders')->where('status', $status)->get();
+        $orders = DB::table('orders')->where('status', $status)->paginate(25);
 
         return view ('order-forms.orderquery', compact('orders'));
 
@@ -48,8 +48,9 @@ class OrderController extends Controller
         $sub += $total;
         }
         session()->put('order', $orders);
-        $sn = DB::table($tableName)->select('sn')->distinct()->get();
+        $sn = DB::table($tableName)->select('sn','color')->where('sn','!=','')->distinct()->get();
 
+        // dd($sn);
 
         return view ('order-forms.view', compact('order','customer','total','orderid','sub','orders','sn'));
 
@@ -65,6 +66,7 @@ class OrderController extends Controller
 
         $i = 0;
             foreach ($sn as $new){
+
                 $num[$i] = $new->sn;
                 ++$i;
             }
@@ -78,6 +80,9 @@ class OrderController extends Controller
             DB::table('rolls')->where('sn',$roll->sn)->update(['remaining' => $remaining]);
         }
 
+
+
+
         $orders->status = 'Completed';
 
         session()->put('order', $orders);
@@ -87,11 +92,15 @@ class OrderController extends Controller
 
     }
 
+    public function completed(Request $request){
+
+
+    }
+
 
     public function advance($status)
     {
         $order = session()->get('order');
-        // dd($order);
 
         DB::table('orders')->where('id', $order->id)->update(['status'=> $status]);
         $orders = DB::table('orders')->where('id', $order->id)->first();
@@ -126,14 +135,28 @@ class OrderController extends Controller
                     $left = $remaining - $remove;
                     DB::table('rolls')->where('sn', $num->sn)->update(['remaining' => $left]);
 
-              }
+                    $order = DB::table($tableName)
+                                    ->where('category','!=','Panels')
+                                    ->where('category','!=','Trim')
+                                    ->get();
+
+
+                    foreach ($order as $item)
+                    {
+                        $inv = DB::table('inventories')->where('desc',$item->desc)->value('quantity');
+                        dd($inv);
+                        $quant = $inv - $item->quantity;
+                        dd($quant);
+                        DB::table('inventories')->where('desc',$item->desc)->update(['quantity' => $quant]);
+                    }
+                }
             }
         return redirect()->route('viewOrder', ['id' => $orders->id]);
     }
 
     public function all()
-    {
-        $orders = DB::table('orders')->get();
+    {   
+        $orders = DB::table('orders')->paginate(25);
 
         return view ('order-forms.orderquery', compact('orders'));
     }

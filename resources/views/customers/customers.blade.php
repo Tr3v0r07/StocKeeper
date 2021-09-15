@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-700 leading-tight">
+        <h2 class="font-semibold text-lg sm:text-xl text-gray-700 leading-tight">
             {{ __('Customers') }}
         </h2>
         <br>
@@ -15,9 +15,9 @@
 
     <div class="py-12">
         <div class="max-w-6xl mx-auto p-1 sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-1 sm:p-6 bg-white border-b border-gray-200">
-                    <div class="mx-3   mt-6 px-6 py-4 bg-gray-200 shadow-md  sm:rounded-lg">
+            <div class="bg-white overflow-hidden my-6 shadow-sm sm:rounded-lg">
+                <div class="m-2 p-3 sm:p-6 bg-gray-200 border-b border-gray-200">
+                    <div class="mx-3 my-3 sm:rounded-lg">
                         @yield('customerSearch')
                         @yield('newCustomer')
                         @yield('editCustomer')

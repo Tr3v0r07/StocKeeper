@@ -65,7 +65,7 @@
                  <label for="" class="col-start-4 sm:col-start-6">Length:<br> ft</label>
                  <label for="" class="col-start-5 sm:col-start-7">in</label>
                  <label for="" class="col-start-6 sm:col-start-8">Quantity</label>
-            <datalist id="rolls">
+                    <datalist id="rolls">
                         <option selected disabled class="">Select Roll</option>
                         @foreach ($rolls as $roll)
                         <option value="{{ $roll->sn }}">{{ $roll->color }} - {{ $roll->gauge }}</option>

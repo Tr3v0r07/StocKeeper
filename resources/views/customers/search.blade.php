@@ -19,13 +19,19 @@
 
 
 <div class="m-auto">
-    <div class=" grid auto-cols-min grid-cols-2 ">
+    <div class=" grid auto-cols-min grid-cols-2 bg-white rounded">
+        <div class="grid grid-cols-2 col-span-2 border-b-2 border-gray-200 mb-2">
             <div class="px-2  col-start-1 text-lg"><strong>Customer<br>Name</strong></div>
             <div class="px-2 col-start-2 text-lg"><strong>Contact<br>Name</strong></div>
+        </div>
+        <div class="grid grid-cols-2 col-span-2" >
         @foreach ($customers as $customer)
-            <div class="px-2 col-start-1 "><a href="customers/{{ $customer->id }}">{{ $customer->name }}</a></div>
-            <div class="px-2 col-start-2 ">{{ $customer->contact }}</div>
+            <div class="px-2 py-1 col-start-1 "><a href="customers/{{ $customer->id }}">{{ $customer->name }}</a></div>
+            <div class="px-2 py-1 col-start-2 ">{{ $customer->contact }}</div>
         @endforeach
+        {{ $customers->links() }}
+    </div>
+
     </div>
 </div>
 @endsection

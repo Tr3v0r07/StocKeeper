@@ -22,9 +22,9 @@ class OrderFactory extends Factory
     public function definition()
     {
         return [
-           
+
             'cust_name' =>$this->faker->name(),
-            'status' =>$this->faker->randomElement(['Estimated' ,'Accepted' ,'Completed' ,'Invoiced' ,'Delivered']),
+            'status' =>$this->faker->randomElement([ 'Started','Estimated' ,'Accepted' ,'Completed' ,'Invoiced' ,'Delivered']),
 
         ];
     }

@@ -41,4 +41,9 @@ class UserController extends Controller
 
     }
 
+    public function dashview(){
+
+        return view('users.admindash');
+    }
+
 }

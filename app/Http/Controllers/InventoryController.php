@@ -16,10 +16,10 @@ class InventoryController extends Controller
 
         if ($curcat != "") {
 
-            $inv = DB::table('inventories')->where('category', $curcat)->get();
+            $inv = DB::table('inventories')->orderBy('category','asc')->where('category', $curcat)->paginate(25);
         }
         else {
-            $inv = Inventory::all();
+            $inv = DB::table('inventories')->orderBy('category','asc')->paginate(25);
 
         }
 
@@ -64,5 +64,31 @@ class InventoryController extends Controller
         return redirect()->back();
     }
 
+    public function newShipment()
+    {
+        $categories = DB::table('inventories')->select('category')->distinct()->get();
+        $inventory = DB::table('inventories')
+                            ->select('desc')
+                            ->where('category','!=','Panels')
+                            ->where('category','!=','Trim')
+                            ->distinct()
+                            ->get();
+        // dd($categories);
+
+        return view('inventory.newShipment',compact('categories','inventory'));
+    }
+
+    public function newShip(Request $request)
+    {
+        foreach ($request['ship'] as $row)
+        {   $quant = DB::table('inventories')->where('desc',$row['desc'])->first();
+            $quant->quantity += $row['quantity'];
+            DB::table('inventories')->where('desc',$row['desc'])->update(['quantity' => $quant->quantity]);
+        }
+
+
+
+        return redirect('inventory/');
+    }
 
 }

@@ -15,7 +15,7 @@ class CustomerController extends Controller
     public function all()
     {
 
-        $customers = DB::table('customers')->get();
+        $customers = DB::table('customers')->paginate(25);
 
         return view('customers.search', compact('customers'));
 
@@ -26,7 +26,7 @@ class CustomerController extends Controller
 
         $customer = Customer::where('id',$id)->first();
 
-        $orders = Order::where('cust_name', $customer->name)->get();
+        $orders = Order::where('cust_name', $customer->name)->paginate(10);
 
         return view('customers.view', compact('customer','orders'));
 
@@ -59,6 +59,7 @@ class CustomerController extends Controller
 
     public function alter($id)
     {
+
         $customer = DB::table('customers')->where('id', $id)->first();
 
         $states= DB::table('us_states')->get();

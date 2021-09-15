@@ -3,33 +3,31 @@
 @section('view')
 @include('inventory.category')
 <style>
-    tr:nth-child(even) {
-        background-color: #eee;
-    }
-    tr:nth-child(odd) {
-        background-color: #fff;
+    .alternate:nth-child(even) {
+        background-color: rgba(229, 231, 235);}
+    .alternate:nth-child(odd) {
+        background-color: rgba(255, 255, 255);
     }
 </style>
 
-<table class="m-auto">
-    <thead>
-        <td class="px-2 text-lg"><strong>Item Descritpion</strong></td>
-        <td class="px-2 text-lg"><strong>Quantity Available</strong></td>
-        <td></td>
-        <td></td>
-    </thead>
-    <tbody>
+<div class="m-auto">
+    <div class="grid grid-cols-2 my-3">
+        <div class="px-2 col-start-1 text-lg"><strong>Item Descritpion</strong></div>
+        <div class="px-2 col-start-2 text-lg"><strong>Quantity Available</strong></div>
+    </div>
         @foreach ($inv as $item)
-            <tr>
-                <td class="px-2">{{ $item->desc }}</td>
+        <div class="alternate rounded my-1 shadow">
+            <div class="grid grid-cols-2">
+                <div class="px-2 col-start-1 ">{{ $item->desc }}</div>
             @if ($item->quantity < $item->low)
-                <td class="px-2 text-red-700">{{ $item->quantity }}</td>
+                <div class="px-2 col-start-2 text-red-700">{{ $item->quantity }}</div>
             @else
-                <td class="px-2 ">{{ $item->quantity }}</td>
+                <div class="px-2 col-start-2 ">{{ $item->quantity }}</div>
             @endif
-                {{-- <td class="px-2"><a href="/inventory/edit/{{ $customer->id }}"><strong>Edit</strong></a></td> --}}
-            </tr>
+                {{-- <div class="px-2"><a href="/inventory/edit/{{ $customer->id }}"><sdivong>Edit</sdivong></a></div> --}}
+            </div>
+        </div>
         @endforeach
-    </tbody>
-</table>
+        {{ $inv->links() }}
+</div>
 @endsection

@@ -1,7 +1,7 @@
 @extends('order-forms.orders')
 
     @section('orderQuery')
-    <div class="rounded p-3 ">
+    <div class="rounded p-3 bg-white m-auto">
         <table class="m-auto">
             <thead >
                 <th class='p-3 text-left'>Order Number</th>
@@ -14,19 +14,25 @@
                     tr:nth-child(even) {
                         background-color: #eee;
                     }
-                    tr:nth-child(od) {
+                    tr:nth-child(odd) {
                         background-color: #fff;
                     }
                 </style>
-
+            <div class="container">
                 @foreach ($orders as $order)
                     <tr  class="rounded-2xl">
-                        <td class='p-3 text-left'><a href="orders/{{ $order->id }}">{{ $order->id }}</a></td>
+                        <td class='p-3 text-left'><a href="orders/view/{{ $order->id }}">{{ $order->id }}</a></td>
                         <td class='p-3 text-left'>{{ $order->cust_name }}</td>
                         <td class='p-3 text-left'>{{ $order->status }}</td>
                     </tr>
                 @endforeach
+            </div>
+
             </tbody>
         </table>
+        @if (count($orders)>25)
+        {{ $orders->links }}
+
+        @endif
     </div>
     @endsection

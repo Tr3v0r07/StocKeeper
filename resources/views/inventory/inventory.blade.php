@@ -1,14 +1,17 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-white leading-tight">
+        <h2 class="font-semibold text-xl text-gray-700 leading-tight">
             {{ __('Inventory') }}
         </h2>
         <br>
         <x-nav-link :href="route('view-inv')" :active="request()->routeIs('view-inv')">
-            {{ __('Current') }}
+            {{ __('Browse Inventory') }}
+        </x-nav-link>
+        <x-nav-link :href="route('newShipment')" :active="request()->routeIs('newShipment')">
+            {{ __('New Shipment') }}
         </x-nav-link>
         <x-nav-link :href="route('new-inv')" :active="request()->routeIs('new-inv')">
-            {{ __('New Inventory') }}
+            {{ __('New Items') }}
         </x-nav-link>
 
     </x-slot>
@@ -16,11 +19,12 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="m-auto p-6 bg-white border-b border-gray-200">
+                <div class="m-auto p-6 bg-white mb-4 border-gray-200">
 
                     @yield('view')
                     @yield('new-inv')
                     @yield('new-roll')
+                    @yield('newShipment')
                 </div>
             </div>
         </div>

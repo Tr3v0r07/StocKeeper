@@ -1,22 +1,23 @@
 <nav x-data="{ open: false }" class="noprint bg-white border-b border-gray-100">
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between h-16">
+        <div class="flex justify-between h-auto">
             <div class="flex">
                 <!-- Logo -->
-                <div class="flex-shrink-0 flex items-center">
-                    <a href="{{ route('dashboard') }}">
-                        <x-icon class="block h-10 w-auto fill-current text-gray-600" />
+                <div class="flex-shrink-0 p-2 flex items-center">
+                    <a href="{{ route('admindashboard') }}">
+                        {{-- <x-icon class="block h-10 fill-current text-gray-600" /> --}}
+                        <img src="{{ URL::asset('/img/logo.png') }}" alt="" height="55" width="55" >
                     </a>
                 </div>
 
                 <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:grid sm:auto-cols-min sm:grid-cols-3 lg:grid-cols-5">
+                    <x-nav-link :href="route('admindashboard')" class="sm:ml-6 sm:py-3" :active="request()->routeIs('admindashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
                     {{-- Orders --}}
-                    <div class="hidden sm:flex sm:items-center sm:ml-6">
+                    <div class="hidden sm:flex sm:items-center sm:ml-6 sm:py-3">
                         <x-dropdown align="left" width="48">
                             <x-slot name="trigger">
                                 <button class="flex items-center text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out">
@@ -42,7 +43,7 @@
                         </x-dropdown>
                     </div>
                     {{-- Customers --}}
-                    <div class="hidden sm:flex sm:items-center sm:ml-6">
+                    <div class="hidden sm:flex sm:items-center sm:ml-6 sm:py-3">
                         <x-dropdown align="left" width="48">
                             <x-slot name="trigger">
                                 <button class="flex items-center text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out">
@@ -68,7 +69,7 @@
                         </x-dropdown>
                     </div>
                     {{-- Inventory --}}
-                    <div class="hidden sm:flex sm:items-center sm:ml-6">
+                    <div class="hidden sm:flex sm:items-center sm:ml-6 sm:py-3">
                         <x-dropdown align="left" width="48">
                             <x-slot name="trigger">
                                 <button class="flex items-center text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out">
@@ -90,7 +91,7 @@
                                     <x-dropdown-link :href="route('new-inv')">
                                         {{ __('New Items') }}
                                     </x-dropdown-link>
-                                    <x-dropdown-link :href="route('new-inv')">
+                                    <x-dropdown-link :href="route('newShipment')">
                                         {{ __('Receive Shipment') }}
                                     </x-dropdown-link>
                                     <x-dropdown-link :href="route('new-roll')">
@@ -101,7 +102,7 @@
                     </div>
                     {{-- User Management --}}
                 @admin
-                    <div class="hidden sm:flex sm:items-center sm:ml-6">
+                    <div class="hidden sm:flex sm:items-center sm:ml-6 sm:py-3 whitespace-nowrap">
                         <x-dropdown align="left" width="48">
                             <x-slot name="trigger">
                                 <button class="flex items-center text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out">
@@ -178,7 +179,7 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+            <x-responsive-nav-link :href="route('admindashboard')" :active="request()->routeIs('admindashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
             {{-- Orders --}}
