@@ -34,9 +34,12 @@
             </div>
             <div class="sm:col-start-8 col-start-7 col-span-2 inline w-full place-items-end">
                     <div class="pb-2 float-right whitespace-nowrap text-xs sm:text-base">{{ date('m/d/Y') }}</div>
-                    <div class=" noprint w-3/4 float-right inline-flex items-center mt-2 py-2   bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150 my-2"><a class="m-auto" href=""><span class="mx-auto">Edit</span></a></div>
+                    {{-- <div class=" noprint w-3/4 float-right inline-flex items-center mt-2 py-2   bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150 my-2"><a class="m-auto" href=""><span class="mx-auto">Edit</span></a></div> --}}
+
                 @admin
-                    <div class=" noprint w-3/4 float-right inline-flex items-center mt-1 py-2   bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150 my-2"><a class="m-auto" href=""><span class="mx-auto">Cancel</span></a></div>
+                @if ($orders->status !== 'Finalized' && $orders->status !== 'Cancelled')
+                    <div class=" noprint w-3/4 float-right inline-flex items-center mt-1 py-2   bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150 my-2"><a class="m-auto" href="{{ route('cancel',(['id' => $orders->id])) }}"><span class="mx-auto">Cancel</span></a></div>
+                @endif
                 @endadmin
 
                 @if ($orders->status == 'Accepted' || $orders->status == 'Estimated')
@@ -123,6 +126,7 @@
                         </div>
                         </div>
                     </div>
+                @elseif ($orders->status == 'Finalized' ||$orders->status == 'Cancelled')
 
                 @else
                     <div class=" noprint w-3/4 float-right inline-flex items-center m-auto mt-1 py-2  bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150  my-2">

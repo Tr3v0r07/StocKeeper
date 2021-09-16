@@ -48,8 +48,11 @@ class CustomerController extends Controller
     {
 
         $customer=$request->except('_token');
-
-
+        if(isset($customer['individual'])){
+            if($customer['individual']== 'on'){
+                $customer['individual']= '1';
+            }
+        }
         DB::table('customers')->insert($customer);
         $customers = DB::table('customers')->get();
 
@@ -71,7 +74,7 @@ class CustomerController extends Controller
     {
         $customer = DB::table('customers')->where('id', $id)->delete();
 
-        return redirect()->back();
+        return redirect(route('customers'));
 
     }
 

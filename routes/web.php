@@ -40,7 +40,7 @@ Route::get('/orders', ([OrderController::Class, 'all']))->middleware(['auth'])->
 Route::get('/orders/query/{status}',([OrderController::Class, 'view']))->middleware(['auth'])->name('view');
 Route::get('/orders/view/{id}', ([OrderController::Class, 'viewOrder']))->middleware(['auth'])->name('viewOrder');
 // Route::get('/orders/edit/{id}', ([OrderController::Class, 'edit']))->middleware(['auth'])->name('edit');
-// Route::get('/orders/delete/{id}', ([OrderController::Class, 'delete']))->middleware(['auth'])->name('delete');
+Route::get('/orders/cancel/{id}', ([OrderController::Class, 'cancel']))->middleware(['auth'])->name('cancel');
 Route::get('/orders/advance/{status}', ([OrderController::Class, 'advance']))->middleware(['auth'])->name('advance');
 Route::post('/orders/Accepted/accepted', ([OrderController::Class, 'accept']))->middleware(['auth'])->name('accept');
 Route::get('/orders/new', ([Ordercontroller::Class, 'newOrder' ]))->middleware(['auth'])->name('newOrder');

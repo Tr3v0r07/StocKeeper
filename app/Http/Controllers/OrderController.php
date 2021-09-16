@@ -108,7 +108,6 @@ class OrderController extends Controller
         $tableName = $orders->cust_name.'/'.$orders->id;
         $sn = DB::table($tableName)->select('sn')->where('sn','!=','')->where('category','Panels')->distinct()->get();
 
-        // dd($sn);
 
             if ($status == 'Accepted'){
                 foreach ($sn as $num){
@@ -129,9 +128,7 @@ class OrderController extends Controller
 
                     $remove = ($ft *12)+$in;
                     $roll = DB::table('rolls')->where('sn', $num->sn)->first();
-                    // dd(is_object($roll));
                     $remaining = $roll->remaining;
-                    // dd($remaining);
                     $left = $remaining - $remove;
                     DB::table('rolls')->where('sn', $num->sn)->update(['remaining' => $left]);
 
@@ -144,9 +141,7 @@ class OrderController extends Controller
                     foreach ($order as $item)
                     {
                         $inv = DB::table('inventories')->where('desc',$item->desc)->value('quantity');
-                        dd($inv);
                         $quant = $inv - $item->quantity;
-                        dd($quant);
                         DB::table('inventories')->where('desc',$item->desc)->update(['quantity' => $quant]);
                     }
                 }
@@ -155,19 +150,19 @@ class OrderController extends Controller
     }
 
     public function all()
-    {   
+    {
         $orders = DB::table('orders')->paginate(25);
 
         return view ('order-forms.orderquery', compact('orders'));
     }
 
 
-    // public function editOrder($id)
-    // {
-    //     $order = DB::table('orders')->where('id',$id)->get();
+    public function cancel($id)
+    {
+        DB::table('orders')->where('id',$id)->update(['status' => 'Cancelled']);
 
-    //     return view ('order-forms.orders', compact('order'));
-    // }
+        return redirect('orders');
+    }
 
     public function newOrder()
     {

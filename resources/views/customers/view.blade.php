@@ -9,7 +9,7 @@
         <div class="col-span-2">{{ $customer->name }}</div>
     @if (isset($customer->contact))
             <div class="col-span-2">{{ $customer->contact }}</div>
-            <div class="col-span-3">{{ $customer->phone }}</div>
+            <div class="col-span-2">{{ $customer->phone }}</div>
             <div class="col-span-2">{{ $customer->email }}</div>
             <div class="col-span-2">{{ $customer->street_1 }}</div>
         @if (!is_null($customer->street_2))

@@ -10,6 +10,8 @@
        });
     });
 </script>
+<div class="m-2 p-3 bg-white shadow-md rounded">
+    <h1 class="font-bold text-xl mb-2 text-gray-800">New Customer</h1>
 
     <form method="POST" action="{{ route('add') }}" class='grid grid-cols-3 gap-x-3 p-2.5'>
         @csrf
@@ -52,4 +54,6 @@
         </x-button>
 
     </form>
+</div>
+
 @endsection
