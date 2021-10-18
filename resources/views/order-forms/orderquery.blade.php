@@ -22,8 +22,8 @@
                 @foreach ($orders as $order)
                     <tr  class="rounded">
                         <td class='p-3 text-left'><a href="orders/view/{{ $order->id }}">{{ $order->id }}</a></td>
-                        <td class='p-3 text-left'>{{ $order->cust_name }}</td>
-                        <td class='p-3 text-left'>{{ $order->status }}</td>
+                        <td class='p-3 text-left'><a href="orders/view/{{ $order->id }}">{{ $order->cust_name }}</a></td>
+                        <td class='p-3 text-left'><a href="orders/view/{{ $order->id }}">{{ $order->status }}</a></td>
                     </tr>
                 @endforeach
             </div>

@@ -18,24 +18,24 @@
 @section('customerSearch')
 <style>
     .alternate:nth-child(even) {
-        background-color: rgba(229, 231, 235);}
+        background-color: rgb(145, 145, 145);}
     .alternate:nth-child(odd) {
         background-color: rgba(255, 255, 255);
     }
 </style>
 
 
-<div class="m-auto">
-    <div class=" grid auto-cols-fr grid-cols-2 m-auto">
-        <div class="grid grid-cols-2 auto-cols-fr col-span-2 bg-white rounded shadow py-3 mb-2">
-            <div class="px-2  col-start-1 text-lg"><strong>Customer Name</strong></div>
+<div class="m-auto max-w-max">
+    <div class="bg-white rounded grid auto-cols-fr grid-cols-2 m-auto py-3">
+        <div class="grid grid-cols-2  col-span-2  py-3 m-2">
+            <div class="px-2  col-start-1 text-lg border-r-2"><strong>Customer Name</strong></div>
             <div class="px-2 col-start-2 text-lg"><strong>Contact Name</strong></div>
         </div>
-        <div class="grid grid-cols-2 auto-cols-fr col-span-2 bg-white rounded shadow" >
+        <div class="grid grid-cols-2 auto-cols-fr col-span-2" >
         @foreach ($customers as $customer)
         <div class="alternate grid grid-cols-2 auto-cols-fr col-span-2 rounded shadow mx-2 my-1">
-            <div class="px-2 py-1 col-start-1 "><a href="customers/{{ $customer->id }}">{{ $customer->name }}</a></div>
-            <div class="px-2 py-1 col-start-2 ">{{ $customer->contact }}</div>
+            <div class="px-2 py-1 col-start-1"><a href="customers/{{ $customer->id }}">{{ $customer->name }}</a></div>
+            <div class="px-2 py-1 col-start-2 "><a href="customers/{{ $customer->id }}">{{ $customer->contact }}</a></div>
         </div>
         @endforeach
         @if (count($customers)>25)

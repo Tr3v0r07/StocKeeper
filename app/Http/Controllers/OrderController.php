@@ -321,8 +321,8 @@ class OrderController extends Controller
             $sub += $total;
         }
             DB::table('orders')->where('id',$orderid)->update(['status' => 'Estimated']);
-            // $order = DB::table($tableName)->get();
-            return view('order-forms.view', compact('order','customer','orderid','sub'));
+            $orders = DB::table('orders')->where('id',$orderid)->first();
+            return view('order-forms.view', compact('order','customer','orderid','sub','orders'));
     }
 
 

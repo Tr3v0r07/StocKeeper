@@ -1,7 +1,7 @@
 @extends('inventory.inventory')
 
 @section('view')
-@include('inventory.category')
+
 <style>
     .alternate:nth-child(even) {
         background-color: rgba(229, 231, 235);}
@@ -10,7 +10,8 @@
     }
 </style>
 
-<div class="m-auto ">
+<div class="m-auto max-w-max">
+    @include('inventory.category')
     <div class="grid grid-cols-2 my-2 bg-white p-2 rounded shadow">
         <div class="px-2 col-start-1 text-lg"><strong>Item Descritpion</strong></div>
         <div class="px-2 col-start-2 text-lg"><strong>Quantity Available</strong></div>

@@ -29,10 +29,10 @@ Route::get('/profile', function () {
 })->middleware(['auth'])->name('profile');
 
 Route::get('/user', ([UserController::Class, 'index']))->middleware(['auth'])->name('user');
-Route::get('/newuser', function () {
+Route::get('/user/new', function () {
     return view('users.newUser');
-})->middleware(['auth'])->name('newUserForm');
-Route::post('/user', ([UserController::Class, 'newUser']))->middleware(['auth'])->name('newUser');
+})->middleware(['admin'])->name('newUser');
+Route::post('/user/new/submit', ([UserController::Class, 'newUser']))->middleware(['admin'])->name('newUser');
 Route::get('/user/edit/{id}', ([UserController::Class, 'edit']))->middleware(['auth'])->name('editUser');
 
 

@@ -195,7 +195,7 @@
                 <x-slot name="name">Customers</x-slot>
                 <x-slot name="children" >
                     <div class="mb-3"><a href="{{ route('customers') }}">View</a><br></div>
-                    <div class="mt-3><a" href="{{ route('new_cust') }}">New</a></div>
+                    <div class="mt-3"><a href="{{ route('new_cust') }}">New</a></div>
                 </x-slot>
             </x-responsive-dropdown>
             {{-- Inventory --}}

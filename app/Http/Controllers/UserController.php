@@ -37,7 +37,7 @@ class UserController extends Controller
             $nuser->save();
         }
         else {
-            $user = $request->all()->except('_token');
+            $user = $request;
 
             DB::table('users')->where('id',$user->id)->update([
                 'first_name' => $user->first_name,

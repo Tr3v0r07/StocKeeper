@@ -17,7 +17,7 @@
         <div class="max-w-6xl mx-auto p-1 sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden my-6 shadow sm:rounded-lg">
                 <div class="m-2 p-3 sm:p-6 bg-gray-200 border-b rounded border-gray-200 shadow-inner">
-                    <div class="mx-3 my-3 sm:rounded-lg">
+                    <div class="w-max mx-auto my-3 sm:rounded-lg">
                         @yield('customerSearch')
                         @yield('newCustomer')
                         @yield('editCustomer')

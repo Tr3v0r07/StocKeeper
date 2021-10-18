@@ -19,6 +19,7 @@ module.exports = {
         extend: {
             opacity: ['disabled'],
         },
+        backgroundColor: ['active', 'even', 'odd', 'hover', 'focus'],
     },
 
     plugins: [require('@tailwindcss/forms')],
