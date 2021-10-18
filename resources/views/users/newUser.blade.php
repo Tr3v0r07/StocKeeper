@@ -8,7 +8,7 @@
 
     @if (!isset($user))
     <h1 class="text-lg font-bold text-gray-800">New User</h1>
-    <form method="POST" action="{{ route('newUser') }}">
+    <form method="POST" action="{{ route('addnewUser') }}">
         @csrf
         <div class="min-w-max">
         <!-- Name -->
